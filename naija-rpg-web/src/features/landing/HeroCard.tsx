@@ -4,9 +4,9 @@ import { motion } from 'framer-motion';
 import { APPROACHES } from '@/lib/constants';
 
 const MOVES = [
-  { approach: 'charm', text: 'Smile and greet him like an old friend' },
+  { approach: 'charm', text: 'Smile and greet them like an old friend' },
   { approach: 'gragra', text: 'Say you know the area chairman' },
-  { approach: 'wisdom', text: 'Tell him you already paid to the area chairman' },
+  { approach: 'wisdom', text: 'Lie to him. You already paid to the area chairman' },
 ] as const;
 
 export function HeroCard() {
@@ -20,7 +20,7 @@ export function HeroCard() {
         <p className="text-xs font-bold uppercase tracking-wider text-mute">Market street</p>
         <h3 className="mt-1 font-display text-xl font-extrabold">The agbero wants his money</h3>
         <p className="mt-2 text-sm text-ink/80">
-          You just parked your car at your junction. A group of agberos walks up and says you must pay him first. What do you do?
+          You just parked your car at your junction. A group of agberos walks up and says you must them first. What do you do?
         </p>
         <div className="mt-3 space-y-2">
           {MOVES.map((m) => (
