@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { getSocket } from '@/lib/socket';
 import { useConn } from '@/stores/connection';
@@ -13,17 +13,11 @@ import type { ChatPerson, FinishedPayload, Message, Profile, RoomState, RoundRes
 
 export function SocketBridge() {
   const router = useRouter();
-  const pathname = usePathname();
   const qc = useQueryClient();
   const userId = useSession((s) => s.session?.user.id);
 
-  const pathRef = useRef(pathname);
   const loginRef = useRef<() => void>(() => {});
   const lastUser = useRef<string | undefined>(undefined);
-
-  useEffect(() => {
-    pathRef.current = pathname;
-  });
 
   useEffect(() => {
     const s = getSocket();
@@ -46,7 +40,8 @@ export function SocketBridge() {
     const onRoom = (room: RoomState) => {
       useGame.getState().setRoom(room);
       const target = `/play/${room.id}`;
-      if (pathRef.current !== target) router.push(target);
+      // read the current path at event time, so no URL hook is needed during the build
+      if (window.location.pathname !== target) router.push(target);
     };
     const onResult = (r: RoundResult) => useGame.getState().setResult(r);
     const onFinished = (f: FinishedPayload) => {
