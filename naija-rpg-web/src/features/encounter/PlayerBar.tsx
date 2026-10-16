@@ -23,7 +23,9 @@ export function PlayerBar({ room, myId }: { room: RoomState; myId?: string }) {
                   </div>
                   <div className="leading-tight">
                     <div className="max-w-24 truncate text-sm font-bold">{p.userId === myId ? 'You' : p.username}</div>
-                    <div className={cn('text-[11px] font-semibold', p.acted ? 'text-brand' : 'text-mute')}>{p.acted ? 'Locked in ✓' : 'Thinking…'}</div>
+                    <div className={cn('text-[11px] font-semibold', p.acted ? 'text-brand' : 'text-mute')}>
+  {room.phase === 'edge' ? (p.acted ? 'Ready ✓' : 'Deciding…') : p.acted ? 'Locked in ✓' : 'Thinking…'}
+</div>
                     {p.status && (
                       <div className={cn('text-[10px] font-extrabold', p.status.mod > 0 ? 'text-brand' : 'text-danger')}>
                         {p.status.label} {p.status.mod > 0 ? '+' : ''}

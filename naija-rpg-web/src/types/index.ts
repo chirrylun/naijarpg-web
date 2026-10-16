@@ -70,6 +70,8 @@ export type RoomState = {
   round: number;
   maxRounds: number;
   roundSeconds: number;
+    phase: Phase;
+  edgeSeconds: number;
   remainingMs: number | null;
   recap: string | null;
   scenario: { id: string; title: string; tagline: string };
@@ -117,3 +119,22 @@ export type FinishedPayload = {
   endings: Partial<Record<Outcome, string>>;
 };
 export type Conversation = { id: string; with: ChatPerson; last: Message | null };
+
+export type Phase = 'choose' | 'edge' | 'reveal';
+export type EdgeOption = { id: StarPlay; cost: number; usable: boolean };
+export type PrivateRoll = {
+  round: number;
+  approach: Approach;
+  die: number;
+  dice: number[];
+  modifier: number;
+  starBonus: number;
+  total: number;
+  tier: Tier;
+  shielded: boolean;
+  stars: number;
+  used: StarPlay | null;
+  done: boolean;
+  edges: EdgeOption[];
+  remainingMs: number | null;
+};
