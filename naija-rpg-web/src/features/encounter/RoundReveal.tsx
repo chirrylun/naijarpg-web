@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/Card';
 import { Dice } from './Dice';
+import { GainedMarks } from './StoryBits';
 import { APPROACHES, TIERS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import type { RoomState, RoundResult, Standing } from '@/types';
@@ -60,9 +61,6 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
                 </div>
                 {r.starPlay === 'reroll' && <div className="text-xs font-bold text-gold">🎲 Reroll: {dice.join(' & ')}, kept {r.die}</div>}
                 {r.starPlay === 'nudge' && <div className="text-xs font-bold text-gold">✨ Nudge: +{r.starBonus}</div>}
-                {r.starPlay === 'shield' && (
-                  <div className="text-xs font-bold text-gold">{r.shielded ? '🛡️ Shield softened the miss' : '🛡️ Shield not needed'}</div>
-                )}
                 <div className={cn('inline-block rounded-full border px-3 py-0.5 text-xs font-extrabold', t.chip)}>
                   {t.emoji} {t.label}
                 </div>
@@ -77,19 +75,9 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
         {result.headline}
       </motion.div>
 
-      {(result.effects.length > 0 || result.blocked?.length > 0) && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.6 }} className="flex flex-wrap justify-center gap-2">
-          {result.effects.map((e) => (
-            <span key={e.userId} className={cn('rounded-full border px-3 py-1 text-xs font-bold', e.mod > 0 ? 'border-brand/40 bg-brand/10 text-brand' : 'border-danger/40 bg-danger/10 text-danger')}>
-              {name(e.userId)}: {e.label} {e.mod > 0 ? '+' : ''}
-              {e.mod} next roll
-            </span>
-          ))}
-          {(result.blocked ?? []).map((b) => (
-            <span key={`b-${b.userId}`} className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-bold text-gold">
-              🛡️ {name(b.userId)}&apos;s Shield blocked &quot;{b.label}&quot;
-            </span>
-          ))}
+      {result.gained.length > 0 && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.6 }}>
+          <GainedMarks gained={result.gained} room={room} myId={myId} />
         </motion.div>
       )}
 
