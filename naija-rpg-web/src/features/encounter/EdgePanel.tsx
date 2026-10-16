@@ -17,6 +17,8 @@ export function EdgePanel() {
   const roll = useGame((s) => s.myRoll);
   const [pick, setPick] = useState<StarPlay | null>(null);
   const [busy, setBusy] = useState(false);
+  // which dice have finished tumbling (keyed by round, position and value)
+  const [landed, setLanded] = useState<Set<string>>(() => new Set());
 
   // AFK, or the private roll hasn't arrived yet
   if (!roll) {
@@ -27,8 +29,19 @@ export function EdgePanel() {
     );
   }
 
+  const keyOf = (d: number, k: number) => `${roll.round}-${k}-${d}`;
+  const mark = (key: string) =>
+    setLanded((prev) => {
+      if (prev.has(key)) return prev;
+      const next = new Set(prev);
+      next.add(key);
+      return next;
+    });
+  // the question only appears once every die has stopped
+  const settled = roll.dice.every((d, k) => landed.has(keyOf(d, k)));
+
   const tier = TIERS[roll.tier];
-  const landed = roll.tier === 'win' || roll.tier === 'legendary';
+  const hit = roll.tier === 'win' || roll.tier === 'legendary';
   const dual = roll.dice.length > 1;
   const kept = roll.dice.indexOf(Math.max(...roll.dice));
   const size = dual ? 76 : 100;
@@ -51,38 +64,46 @@ export function EdgePanel() {
           Your roll · {APPROACHES[roll.approach].emoji} {APPROACHES[roll.approach].label}
         </div>
         <div className="flex items-start justify-center gap-2">
-          {roll.dice.map((d, k) => (
-            <div key={`${roll.round}-${k}-${d}`} className={cn('flex flex-col items-center', dual && k !== kept && 'opacity-45')}>
-              <Dice value={d} delay={k * 200} size={size} />
-              {dual && (
-                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.9 }} className={cn('text-[10px] font-extrabold uppercase', k === kept ? 'text-gold' : 'text-mute')}>
-                  {k === kept ? 'kept' : 'dropped'}
-                </motion.span>
-              )}
-            </div>
-          ))}
+          {roll.dice.map((d, k) => {
+            const key = keyOf(d, k);
+            return (
+              <div key={key} className={cn('flex flex-col items-center', dual && settled && k !== kept && 'opacity-45')}>
+                <Dice value={d} delay={k * 200} size={size} onSettled={() => mark(key)} />
+                {dual && settled && (
+                  <span className={cn('text-[10px] font-extrabold uppercase', k === kept ? 'text-gold' : 'text-mute')}>
+                    {k === kept ? 'kept' : 'dropped'}
+                  </span>
+                )}
+              </div>
+            );
+          })}
         </div>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.7 }} className="space-y-1">
-          <div className="text-sm text-mute">
-            {roll.die} {roll.modifier >= 0 ? '+' : '−'} {Math.abs(roll.modifier)}
-            {roll.starBonus ? ` + ${roll.starBonus}★` : ''} = <span className="font-extrabold text-ink">{roll.total}</span>
-          </div>
-          <div className={cn('inline-block rounded-full border px-3 py-0.5 text-xs font-extrabold', tier.chip)}>
-            {tier.emoji} {tier.label}
-          </div>
-          <p className="text-xs text-mute">The others can&apos;t see this until everyone has decided.</p>
-        </motion.div>
+
+        {settled ? (
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="space-y-1">
+            <div className="text-sm text-mute">
+              {roll.die} {roll.modifier >= 0 ? '+' : '−'} {Math.abs(roll.modifier)}
+              {roll.starBonus ? ` + ${roll.starBonus}★` : ''} = <span className="font-extrabold text-ink">{roll.total}</span>
+            </div>
+            <div className={cn('inline-block rounded-full border px-3 py-0.5 text-xs font-extrabold', tier.chip)}>
+              {tier.emoji} {tier.label}
+            </div>
+            <p className="text-xs text-mute">The others can&apos;t see this until everyone has decided.</p>
+          </motion.div>
+        ) : (
+          <div className="h-12 animate-pulse pt-3 text-sm font-semibold text-mute">Rolling…</div>
+        )}
       </Card>
 
-      {roll.done ? (
-        <div className="rounded-2xl border border-brand/30 bg-brand/5 p-4 text-center font-semibold text-brand">
+      {!settled ? null : roll.done ? (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl border border-brand/30 bg-brand/5 p-4 text-center font-semibold text-brand">
           {roll.used === 'reroll' && `🎲 Reroll: ${roll.dice.join(' & ')}, kept ${roll.die}`}
           {roll.used === 'nudge' && `✨ Nudge: +${roll.starBonus} on your roll`}
           {roll.used === 'shield' && '🛡️ Shield up: a miss will not hurt you'}
           {!roll.used && 'You kept your roll'} <span className="animate-pulse text-mute">· waiting for the others…</span>
-        </div>
+        </motion.div>
       ) : (
-        <>
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
           <div>
             <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wide text-mute">
               <span>Use an edge? (one per scene)</span>
@@ -92,7 +113,7 @@ export function EdgePanel() {
               {roll.edges.map((e) => {
                 const s = STAR_PLAYS[e.id];
                 const on = pick === e.id;
-                const needless = e.id === 'shield' && landed;
+                const needless = e.id === 'shield' && hit;
                 return (
                   <button
                     key={e.id}
@@ -112,7 +133,7 @@ export function EdgePanel() {
           <Button size="lg" variant={pick ? 'gold' : 'primary'} className="w-full" loading={busy} onClick={confirm}>
             {pick ? `Use ${STAR_PLAYS[pick].label} · ★${STAR_PLAYS[pick].cost}` : 'Keep my roll'}
           </Button>
-        </>
+        </motion.div>
       )}
     </div>
   );
