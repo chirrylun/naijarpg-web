@@ -36,7 +36,6 @@ export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }
       <div className="grid gap-2">
         {moves.map(({ c, tags, locked }) => {
           const a = APPROACHES[c.approach];
-          const mod = Math.min(me?.stats?.[c.approach] ?? 0, 3);
           const on = approach === c.approach;
           const blocked = locked !== null;
           return (
@@ -81,12 +80,6 @@ export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }
                   )
                 )}
               </span>
-              {!blocked && (
-                <span className="rounded-lg bg-panel-2 px-2 py-1 text-xs font-bold text-brand">
-                  {mod >= 0 ? '+' : ''}
-                  {mod}
-                </span>
-              )}
             </button>
           );
         })}

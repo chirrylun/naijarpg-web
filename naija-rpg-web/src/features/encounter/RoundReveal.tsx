@@ -40,7 +40,6 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
         {rolls.map((r, i) => {
           const t = TIERS[r.tier];
           const name = r.userId === myId ? 'You' : (room.players.find((p) => p.userId === r.userId)?.username ?? 'Player');
-          const bonus = r.modifier + r.starBonus;
           const show = timedOut || landed.has(r.userId);
           return (
             <div key={r.userId} className="flex flex-col items-center gap-2 rounded-3xl border border-line bg-panel p-3 text-center">
@@ -52,10 +51,7 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
                 className="flex min-h-[84px] flex-col items-center"
               >
                 <div className="font-display text-5xl font-extrabold leading-none">{r.total}</div>
-                <div className="mt-1 text-xs text-mute">
-                  {`Dice ${r.die}`}
-                  {bonus !== 0 ? ` ${bonus > 0 ? '+' : '−'} ${Math.abs(bonus)} bonus` : ''}
-                </div>
+                {r.starBonus > 0 && <div className="mt-1 text-xs font-bold text-gold">dice {r.die} + {r.starBonus} bonus</div>}
                 <div className={cn('mt-2 rounded-full border px-3 py-0.5 text-xs font-extrabold', t.chip)}>
                   {t.emoji} {t.label}
                 </div>

@@ -38,7 +38,7 @@ export function EncounterRoom({ room }: { room: RoomState }) {
         </div>
       )}
       {result ? (
-        <RoundReveal room={room} result={result} myId={myId} />
+        <RoundReveal key={`reveal-${result.round}`} room={room} result={result} myId={myId} />
       ) : room.phase === 'edge' ? (
         <EdgePanel key={`${room.id}:${room.round}`} />
       ) : (
