@@ -9,7 +9,7 @@ import { useGame } from '@/stores/game';
 import { useSession } from '@/stores/session';
 import { useToast } from '@/stores/toast';
 import { useChatUi } from '@/stores/chatUi';
-import type { ChatPerson, Conversation, FinishedPayload, Message, Profile, RoomState, RoundResult } from '@/types';
+import type { ChatPerson, Conversation, PrivateRoll, FinishedPayload, Message, Profile, RoomState, RoundResult } from '@/types';
 
 export function SocketBridge() {
   const router = useRouter();
@@ -44,6 +44,8 @@ export function SocketBridge() {
       if (window.location.pathname !== target) router.push(target);
     };
     const onResult = (r: RoundResult) => useGame.getState().setResult(r);
+    // 2. add the handler next to onResult
+const onRoll = (r: PrivateRoll) => useGame.getState().setMyRoll(r);
     const onFinished = (f: FinishedPayload) => {
       useGame.getState().setFinished(f);
       // the server saves scores a moment after announcing the result
@@ -95,6 +97,7 @@ export function SocketBridge() {
     s.on('stats:live', onLive);
     s.on('room:state', onRoom);
     s.on('round:result', onResult);
+    s.on('roll:private', onRoll);
     s.on('encounter:finished', onFinished);
     s.on('rematch:status', onRematchStatus);
     s.on('rematch:start', onRematchStart);
@@ -112,6 +115,7 @@ export function SocketBridge() {
       s.off('disconnect', onDisconnect);
       s.off('stats:live', onLive);
       s.off('room:state', onRoom);
+      s.off('roll:private', onRoll);
       s.off('round:result', onResult);
       s.off('encounter:finished', onFinished);
       s.off('rematch:status', onRematchStatus);
