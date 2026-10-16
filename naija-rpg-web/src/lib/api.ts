@@ -32,7 +32,6 @@ const MESSAGES: Record<string, string> = {
   not_enough_stars: "You don't have enough stars for that.",
   signup_required: 'Create an account to buy stars.',
   room_full: 'That game is already full.',
-    shield_not_needed: "You already landed it, so a Shield isn't needed.",
   already_decided: "You've already decided.",
   not_accepting_actions: 'Too late, that step is over.',
   invite_not_found: 'That challenge has expired.',

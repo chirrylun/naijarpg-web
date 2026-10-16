@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -11,14 +11,31 @@ import { emitAck } from '@/lib/socket';
 import { useGame } from '@/stores/game';
 import { useToast } from '@/stores/toast';
 import { cn } from '@/lib/utils';
-import type { StarPlay } from '@/types';
+import type { PrivateRoll, StarPlay } from '@/types';
 
 export function EdgePanel() {
   const roll = useGame((s) => s.myRoll);
+  const phase = useGame((s) => s.room?.phase);
+  const round = useGame((s) => s.room?.round);
   const [pick, setPick] = useState<StarPlay | null>(null);
   const [busy, setBusy] = useState(false);
   // which dice have finished tumbling (keyed by round, position and value)
   const [landed, setLanded] = useState<Set<string>>(() => new Set());
+
+  // Recovery: if the roll never arrived (refresh, reconnect, missed event), ask the server for it.
+  // Must stay above the early return below so hook order never changes.
+  useEffect(() => {
+    if (roll || phase !== 'edge') return;
+    let cancelled = false;
+    emitAck<PrivateRoll>('roll:mine')
+      .then((r) => {
+        if (!cancelled && !useGame.getState().myRoll) useGame.getState().setMyRoll(r);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [roll, phase, round]);
 
   // AFK, or the private roll hasn't arrived yet
   if (!roll) {
@@ -41,7 +58,6 @@ export function EdgePanel() {
   const settled = roll.dice.every((d, k) => landed.has(keyOf(d, k)));
 
   const tier = TIERS[roll.tier];
-  const hit = roll.tier === 'win' || roll.tier === 'legendary';
   const dual = roll.dice.length > 1;
   const kept = roll.dice.indexOf(Math.max(...roll.dice));
   const size = dual ? 76 : 100;
@@ -99,21 +115,19 @@ export function EdgePanel() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl border border-brand/30 bg-brand/5 p-4 text-center font-semibold text-brand">
           {roll.used === 'reroll' && `🎲 Reroll: ${roll.dice.join(' & ')}, kept ${roll.die}`}
           {roll.used === 'nudge' && `✨ Nudge: +${roll.starBonus} on your roll`}
-          {roll.used === 'shield' && '🛡️ Shield up: a miss will not hurt you'}
           {!roll.used && 'You kept your roll'} <span className="animate-pulse text-mute">· waiting for the others…</span>
         </motion.div>
       ) : (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
           <div>
             <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wide text-mute">
-              <span>Use an edge? (one per scene)</span>
+              <span>Use a bonus? (one per scene)</span>
               <span className="text-gold">★ {roll.stars}</span>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {roll.edges.map((e) => {
                 const s = STAR_PLAYS[e.id];
                 const on = pick === e.id;
-                const needless = e.id === 'shield' && hit;
                 return (
                   <button
                     key={e.id}
@@ -123,7 +137,7 @@ export function EdgePanel() {
                     className={cn('rounded-2xl border p-2 text-center transition', on ? 'border-gold bg-gold/10' : 'border-line bg-panel', !e.usable && 'opacity-40')}
                   >
                     <div className="font-display text-sm font-extrabold">{s.label}</div>
-                    <div className="text-[11px] leading-tight text-mute">{needless ? 'Not needed, you landed it' : s.blurb}</div>
+                    <div className="text-[11px] leading-tight text-mute">{s.blurb}</div>
                     <div className="mt-1 text-xs font-bold text-gold">★ {s.cost}</div>
                   </button>
                 );

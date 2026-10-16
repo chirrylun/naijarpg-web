@@ -1,8 +1,13 @@
+import { STAR_PLAYS } from '@/lib/constants';
+
 const STEPS = [
   { n: '1', t: 'Pick your move', d: 'Charm, Hustle, Gra-Gra or Wisdom. Every scene has its own odds.' },
-  { n: '2', t: 'Roll the d20', d: 'The server rolls. Nobody can cheat the dice, not even you.' },
-  { n: '3', t: 'Bend the odds', d: 'Spend stars to reroll, nudge or shield. Helpful, never a guaranteed win.' },
+  { n: '2', t: 'Roll the d20', d: 'The server rolls for you and only you can see it. Nobody can cheat the dice.' },
+  { n: '3', t: 'Use a bonus', d: 'Look at your roll, then spend stars on a bonus if you want one. Or keep your roll.' },
 ];
+
+// the bonuses players can use right now
+const BONUSES = (['reroll', 'nudge'] as const).map((id) => ({ id, ...STAR_PLAYS[id] }));
 
 export function HowItWorks() {
   return (
@@ -16,6 +21,24 @@ export function HowItWorks() {
             <p className="mt-1 text-sm text-mute">{s.d}</p>
           </div>
         ))}
+      </div>
+
+      <div className="mt-3 rounded-3xl border border-gold/30 bg-gold/5 p-4">
+        <div className="font-display text-lg font-extrabold">Bonuses</div>
+        <p className="mt-1 text-sm text-mute">
+          Stars buy you a bonus after you see your roll. You can use one per scene. They help, but they never guarantee a win.
+        </p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          {BONUSES.map((b) => (
+            <div key={b.id} className="rounded-2xl border border-line bg-panel p-3">
+              <div className="flex items-center justify-between">
+                <span className="font-display font-extrabold">{b.label}</span>
+                <span className="text-xs font-bold text-gold">★ {b.cost}</span>
+              </div>
+              <p className="mt-1 text-sm text-mute">{b.blurb}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
