@@ -43,7 +43,7 @@ export function StarShop() {
             </li>
           ))}
         </ul>
-        <p className="mt-2 text-xs text-mute">One boost per round. Stars nudge luck, they don&apos;t buy wins.</p>
+        <p className="mt-2 text-xs text-mute">One boost per round. Stars increase your chances, they don&apos;t buy wins.</p>
       </Card>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
