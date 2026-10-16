@@ -1,7 +1,6 @@
 import { Avatar } from '@/features/avatar/Avatar';
 import { cn } from '@/lib/utils';
 import type { RoomState } from '@/types';
-import { MarkChips } from './StoryBits';
 
 export function PlayerBar({ room, myId }: { room: RoomState; myId?: string }) {
   const myTeam = room.players.find((p) => p.userId === myId)?.team;
@@ -25,9 +24,8 @@ export function PlayerBar({ room, myId }: { room: RoomState; myId?: string }) {
                   <div className="leading-tight">
                     <div className="max-w-24 truncate text-sm font-bold">{p.userId === myId ? 'You' : p.username}</div>
                     <div className={cn('text-[11px] font-semibold', p.acted ? 'text-brand' : 'text-mute')}>
-  {room.phase === 'edge' ? (p.acted ? 'Ready ✓' : 'Deciding…') : p.acted ? 'Locked in ✓' : 'Thinking…'}
-</div>
-                    <MarkChips marks={p.marks} />
+                      {room.phase === 'edge' ? (p.acted ? 'Ready ✓' : 'Deciding…') : p.acted ? 'Locked in ✓' : 'Thinking…'}
+                    </div>
                   </div>
                 </div>
               ))}

@@ -1,91 +1,88 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Card } from '@/components/ui/Card';
 import { Dice } from './Dice';
-import { GainedMarks } from './StoryBits';
-import { APPROACHES, TIERS } from '@/lib/constants';
+import { TIERS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import type { RoomState, RoundResult, Standing } from '@/types';
+import type { RollRow, RoomState, RoundResult } from '@/types';
 
-const STANDING: Record<Standing, { text: string; cls: string } | null> = {
-  won: { text: 'Took the scene', cls: 'text-brand' },
-  lost: { text: 'Lost the scene', cls: 'text-danger' },
-  level: { text: 'Level', cls: 'text-sky' },
-  crew: null,
-};
+function verdict(result: RoundResult, mine: RollRow | undefined) {
+  if (result.kind === 'all_pass') return { emoji: '🎉', text: 'You did it together!', tone: 'text-brand' };
+  if (result.kind === 'mixed') return { emoji: '😅', text: 'Some of you did it!', tone: 'text-gold' };
+  if (result.kind === 'all_fail') return { emoji: '😬', text: "It didn't work this time", tone: 'text-danger' };
+  if (mine?.standing === 'won') return { emoji: '🎉', text: 'You win this round!', tone: 'text-gold' };
+  if (mine?.standing === 'lost') return { emoji: '😤', text: 'They win this round', tone: 'text-danger' };
+  return { emoji: '🤝', text: "It's a tie!", tone: 'text-sky' };
+}
 
 export function RoundReveal({ room, result, myId }: { room: RoomState; result: RoundResult; myId?: string }) {
-  const name = (id: string) => (id === myId ? 'You' : room.players.find((p) => p.userId === id)?.username ?? 'Player');
-  const many = result.rolls.length > 2;
+  // your own die always comes first
+  const rolls = [...result.rolls].sort((a, b) => (a.userId === myId ? -1 : b.userId === myId ? 1 : 0));
+  const mine = rolls.find((r) => r.userId === myId);
+
+  const [landed, setLanded] = useState<ReadonlySet<string>>(new Set());
+  const [timedOut, setTimedOut] = useState(false);
+  const allLanded = timedOut || landed.size >= rolls.length;
+  const land = (id: string) => setLanded((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
+
+  // safety net: still show the result if a die never reports back
+  useEffect(() => {
+    const t = setTimeout(() => setTimedOut(true), 2800 + rolls.length * 300);
+    return () => clearTimeout(t);
+  }, [rolls.length]);
+
+  const v = verdict(result, mine);
 
   return (
-    <div className="space-y-4">
-      <div className={cn('grid gap-3', many ? 'grid-cols-2' : 'grid-cols-1 min-[420px]:grid-cols-2')}>
-        {result.rolls.map((r, i) => {
+    <div className="space-y-5">
+      <div className="grid grid-cols-2 gap-3">
+        {rolls.map((r, i) => {
           const t = TIERS[r.tier];
-          const st = STANDING[r.standing];
-          const dice = r.dice?.length ? r.dice : [r.die];
-          const dual = dice.length > 1;
-          const kept = dice.indexOf(Math.max(...dice));
-          const size = dual ? (many ? 56 : 72) : many ? 84 : 104;
+          const name = r.userId === myId ? 'You' : (room.players.find((p) => p.userId === r.userId)?.username ?? 'Player');
+          const bonus = r.modifier + r.starBonus;
+          const show = timedOut || landed.has(r.userId);
           return (
-            <Card key={r.userId} className="flex flex-col items-center gap-1 px-2 text-center">
-              <div className="text-sm font-bold">{name(r.userId)}</div>
-              <div className="text-xs text-mute">
-                {APPROACHES[r.approach].emoji} {APPROACHES[r.approach].label}
-              </div>
-
-              <div className="flex items-start justify-center gap-1">
-                {dice.map((d, k) => (
-                  <div key={k} className={cn('flex flex-col items-center', dual && k !== kept && 'opacity-45')}>
-                    <Dice value={d} delay={i * 250 + k * 150} size={size} />
-                    {dual && (
-                      <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1.9 }}
-                        className={cn('text-[10px] font-extrabold uppercase', k === kept ? 'text-gold' : 'text-mute')}
-                      >
-                        {k === kept ? 'kept' : 'dropped'}
-                      </motion.span>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.9 + i * 0.15 }} className="space-y-1">
-                <div className="text-sm text-mute">
-                  {r.die} {r.modifier >= 0 ? '+' : '−'} {Math.abs(r.modifier)}
-                  {r.starBonus ? ` + ${r.starBonus}★` : ''} = <span className="font-extrabold text-ink">{r.total}</span>
+            <div key={r.userId} className="flex flex-col items-center gap-2 rounded-3xl border border-line bg-panel p-3 text-center">
+              <div className="max-w-full truncate text-sm font-bold">{name}</div>
+              <Dice value={r.die} size={96} delay={i * 300} onSettled={() => land(r.userId)} />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={show ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+                className="flex min-h-[84px] flex-col items-center"
+              >
+                <div className="font-display text-5xl font-extrabold leading-none">{r.total}</div>
+                <div className="mt-1 text-xs text-mute">
+                  {`Dice ${r.die}`}
+                  {bonus !== 0 ? ` ${bonus > 0 ? '+' : '−'} ${Math.abs(bonus)} bonus` : ''}
                 </div>
-                {r.starPlay === 'reroll' && <div className="text-xs font-bold text-gold">🎲 Reroll: {dice.join(' & ')}, kept {r.die}</div>}
-                {r.starPlay === 'nudge' && <div className="text-xs font-bold text-gold">✨ Nudge: +{r.starBonus}</div>}
-                <div className={cn('inline-block rounded-full border px-3 py-0.5 text-xs font-extrabold', t.chip)}>
+                <div className={cn('mt-2 rounded-full border px-3 py-0.5 text-xs font-extrabold', t.chip)}>
                   {t.emoji} {t.label}
                 </div>
-                {st && <div className={cn('text-xs font-extrabold uppercase tracking-wide', st.cls)}>{st.text}</div>}
               </motion.div>
-            </Card>
+            </div>
           );
         })}
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.2 }} className="text-center font-display text-lg font-extrabold leading-snug">
-        {result.headline}
+      <motion.div
+        role="status"
+        aria-live="polite"
+        initial={{ opacity: 0, y: 8 }}
+        animate={allLanded ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+        className="min-h-[88px] text-center"
+      >
+        <div className="text-5xl">{v.emoji}</div>
+        <div className={cn('font-display text-2xl font-extrabold', v.tone)}>{v.text}</div>
       </motion.div>
 
-      {result.gained.length > 0 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.6 }}>
-          <GainedMarks gained={result.gained} room={room} myId={myId} />
-        </motion.div>
-      )}
-
-      <div className="space-y-1">
-        <div className="h-2 overflow-hidden rounded-full bg-panel-2">
-          <motion.div className="h-full rounded-full bg-brand" initial={{ width: '0%' }} animate={{ width: '100%' }} transition={{ duration: result.revealMs / 1000, ease: 'linear' }} />
-        </div>
-        <div className="text-center text-xs text-mute">{result.ends ? 'The story wraps up…' : 'Next scene loading…'}</div>
+      <div className="h-1 overflow-hidden rounded-full bg-panel-2">
+        <motion.div
+          className="h-full bg-brand"
+          initial={{ width: '0%' }}
+          animate={{ width: '100%' }}
+          transition={{ duration: result.revealMs / 1000, ease: 'linear' }}
+        />
       </div>
     </div>
   );
