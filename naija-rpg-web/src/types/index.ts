@@ -59,7 +59,7 @@ export type Kind = 'decisive' | 'both_succeed' | 'both_fail' | 'tie' | 'all_pass
 export type Standing = 'won' | 'lost' | 'level' | 'crew';
 export type Status = { mod: number; label: string } | null;
 
-export type RoomPlayer = { userId: string; username: string; avatar: Look; team: number; acted: boolean; status: Status };
+export type RoomPlayer = { userId: string; username: string; avatar: Look; team: number; acted: boolean; marks: MarkInfo[] };
 export type RoomState = {
   id: string;
   code: string | null;
@@ -74,13 +74,15 @@ export type RoomState = {
   edgeSeconds: number;
   remainingMs: number | null;
   recap: string | null;
+  world: MarkInfo[]
   scenario: { id: string; title: string; tagline: string };
   scene: null | {
     key: string;
     title: string;
     text: string;
     stakes: string | null;
-    choices: { approach: Approach; label: string }[];
+    twists: string[]
+    choices: SceneChoice[]
   };
   players: RoomPlayer[];
 };
@@ -107,8 +109,8 @@ export type RoundResult = {
   same: boolean;
   winnerTeam: number | null;
   headline: string;
-  blocked: { userId: string; label: string }[];
-  effects: { userId: string; mod: number; label: string }[];
+  gained: Gained[]
+  lead: { userId: string; approach: Approach } | null
   ends: boolean;
   revealMs: number;
 };
@@ -117,6 +119,8 @@ export type FinishedPayload = {
   mode: Mode;
   results: { userId: string; username: string; team: number; result: Outcome; points: number }[];
   endings: Partial<Record<Outcome, string>>;
+  story: string[] 
+  epilogue: string[]
 };
 export type Conversation = { id: string; with: ChatPerson; last: Message | null };
 
@@ -138,3 +142,12 @@ export type PrivateRoll = {
   edges: EdgeOption[];
   remainingMs: number | null;
 };
+export type MarkInfo = { id: string; label: string; tip: string };
+export type MarkWho = 'self' | 'rival' | 'world';
+export type SceneChoice = {
+  approach: Approach;
+  label: string;
+  mods: { mark: string; who: MarkWho; delta: number; label: string }[];
+  lock: { mark: string; who: MarkWho; reason: string } | null;
+};
+export type Gained = { userId: string | null; mark: string; label: string; tip: string };
