@@ -1,6 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { APPROACHES } from '@/lib/constants';
+
+const MOVES = [
+  { approach: 'charm', text: 'Ask the neighbour to share their generator' },
+  { approach: 'hustle', text: 'Run to buy fuel' },
+  { approach: 'wisdom', text: 'Check if it is just your fuse' },
+] as const;
 
 export function HeroCard() {
   return (
@@ -10,24 +17,18 @@ export function HeroCard() {
         transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
         className="rounded-3xl border border-line bg-panel p-4 shadow-2xl"
       >
-        <p className="text-xs font-bold uppercase tracking-wider text-mute">NEPA Match Night</p>
-        <h3 className="mt-1 font-display text-xl font-extrabold">Light Don Go</h3>
-        <p className="mt-2 text-sm text-ink/80">
-          The Super Eagles are level in the 85th minute and NEPA chooses this exact moment to strike.
-        </p>
+        <p className="text-xs font-bold uppercase tracking-wider text-mute">Match night</p>
+        <h3 className="mt-1 font-display text-xl font-extrabold">The power goes out!</h3>
+        <p className="mt-2 text-sm text-ink/80">The big match is tied, and the lights go off. What do you do?</p>
         <div className="mt-3 space-y-2">
-          {[
-            ['😎', 'Sweet-talk the neighbour with the generator', '+2'],
-            ['💪🏾', 'Run to the junction for fuel', '+1'],
-            ['🧠', 'Check if it is just your fuse', '+3'],
-          ].map(([e, t, m]) => (
-            <div key={t} className="flex items-center gap-2 rounded-xl border border-line bg-panel-2 px-3 py-2 text-sm">
-              <span>{e}</span>
-              <span className="flex-1">{t}</span>
-              <span className="font-bold text-brand">{m}</span>
+          {MOVES.map((m) => (
+            <div key={m.approach} className="flex items-center gap-2 rounded-xl border border-line bg-panel-2 px-3 py-2 text-sm">
+              <span>{APPROACHES[m.approach].emoji}</span>
+              <span className="flex-1">{m.text}</span>
             </div>
           ))}
         </div>
+        <p className="mt-3 text-xs font-semibold text-mute">Pick a move, then roll the dice.</p>
       </motion.div>
       <motion.div
         animate={{ rotate: [0, 14, -10, 0] }}

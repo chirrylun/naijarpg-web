@@ -99,21 +99,6 @@ export default function ProfilePage() {
 
       {isMe && me && (
         <>
-          <Card>
-            <div className="mb-2 font-display text-lg font-extrabold">Your moves</div>
-            <div className="space-y-2">
-              {(Object.keys(APPROACHES) as Approach[]).map((a) => (
-                <div key={a} className="flex items-center gap-3 text-sm">
-                  <span className="w-24 font-semibold">{APPROACHES[a].emoji} {APPROACHES[a].label}</span>
-                  <div className="h-2 flex-1 rounded-full bg-panel-2">
-                    <div className="h-full rounded-full bg-brand" style={{ width: `${Math.min(me.stats[a], 3) * 33.3}%` }} />
-                  </div>
-                  <span className="w-6 text-right font-bold text-brand">+{Math.min(me.stats[a], 3)}</span>
-                </div>
-              ))}
-            </div>
-          </Card>
-
           <Link href="/shop?tab=cosmetics" className={btn('gold', 'lg', 'w-full')}>
             Change my look
           </Link>
