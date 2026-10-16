@@ -11,7 +11,7 @@ import { ChatDock } from '@/features/chat/ChatDock';
 const body = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-body' });
 const heading = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-heading' });
 
-const title = 'Naija RPG: live the gist, roll the dice';
+const title = 'Naija RPG: Life happens, roll the dice';
 const description =
   'Real Naija wahala, one dice, and your guy across the table. Play 2-minute encounters free in your browser.';
 

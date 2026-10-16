@@ -6,6 +6,7 @@ import { ChoicePanel } from './ChoicePanel';
 import { EdgePanel } from './EdgePanel';
 import { RoundReveal } from './RoundReveal';
 import { RoundTimer } from './RoundTimer';
+import { MarkChips } from './StoryBits';
 import { useGame } from '@/stores/game';
 import { useSession } from '@/stores/session';
 import type { RoomState } from '@/types';
@@ -24,6 +25,7 @@ export function EncounterRoom({ room }: { room: RoomState }) {
         <span className="rounded-full bg-panel-2 px-3 py-1 text-mute">
           Scene {room.round}/{room.maxRounds}
         </span>
+        <MarkChips marks={room.world} />
         <span className="rounded-full bg-panel-2 px-3 py-1 uppercase tracking-wide text-brand">
           {room.format} · {room.mode === 'coop' ? 'Co-op' : room.mode === 'team' ? 'Teams' : 'Face off'}
         </span>

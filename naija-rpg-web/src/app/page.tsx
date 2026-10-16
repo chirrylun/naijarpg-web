@@ -58,7 +58,7 @@ export default function Home() {
             Free in your browser
           </p>
           <h1 className="font-display text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl">
-            Pick a move.
+            Life happens.
             <br />
             <span className="text-brand">Roll the dice.</span>
           </h1>

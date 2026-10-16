@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Card } from '@/components/ui/Card';
 import { fillNames } from '@/lib/narrative';
 import { useSession } from '@/stores/session';
+import { Twists } from './StoryBits';
 import type { RoomState } from '@/types';
 
 export function ScenarioCard({ room }: { room: RoomState }) {
@@ -30,6 +31,7 @@ export function ScenarioCard({ room }: { room: RoomState }) {
               ⚔️ At stake: {fill(scene.stakes)}
             </div>
           )}
+          <Twists lines={(scene.twists ?? []).map((t) => fill(t) ?? t)} />
         </Card>
       </motion.div>
     </AnimatePresence>
