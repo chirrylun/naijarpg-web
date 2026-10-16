@@ -111,11 +111,11 @@ export default function PlayPage() {
 
       {daily.data && (
         <Card className="border-gold/40 bg-gold/5">
-          <p className="text-xs font-bold uppercase tracking-wider text-gold">Today&apos;s Gist · same for everyone</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-gold">Today&apos;s Special Event</p>
           <div className="mt-1 font-display text-2xl font-extrabold">{daily.data.scenario.title}</div>
           <p className="text-sm text-mute">{daily.data.scenario.tagline}</p>
           <Button className="mt-3" variant="gold" onClick={playDaily}>
-            Play today&apos;s Gist
+            Play
           </Button>
         </Card>
       )}
