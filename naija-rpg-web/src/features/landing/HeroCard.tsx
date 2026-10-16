@@ -37,7 +37,7 @@ export function HeroCard() {
         transition={{ repeat: Infinity, duration: 5 }}
         className="absolute -right-3 -top-5 flex size-16 items-center justify-center rounded-2xl bg-gold font-display text-2xl font-extrabold text-[#241800] shadow-[0_5px_0_0_var(--color-gold-deep)]"
       >
-        20 points
+        +20
       </motion.div>
     </div>
   );

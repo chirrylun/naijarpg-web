@@ -63,7 +63,7 @@ export default function Home() {
             <span className="text-brand">Roll the dice.</span>
           </h1>
           <p className="mt-4 max-w-md text-lg text-mute">
-            It's 8:35pm and it's the last danfo. There's only one seat left but you see somebody already running for it. What do you do? Play short 2-minute stories from Nigerian life, against your friends or with them.
+            It's 8:35pm and it's the last danfo. There's only one seat left but you see somebody already running for it. What do you do? Play short 2-minute stories from everyday Nigerian life, against your friends or with them.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button size="lg" loading={starting} onClick={play}>
