@@ -13,7 +13,7 @@ const heading = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-head
 
 const title = 'Naija RPG: live the gist, roll the dice';
 const description =
-  'Real Naija wahala, one d20, and your guy across the table. Play 2-minute encounters free in your browser.';
+  'Real Naija wahala, one dice, and your guy across the table. Play 2-minute encounters free in your browser.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
