@@ -1,9 +1,9 @@
 import { STAR_PLAYS } from '@/lib/constants';
 
 const STEPS = [
-  { n: '1', t: 'Pick your move', d: 'Charm, Hustle, Gra-Gra or Wisdom. Every scene has its own odds.' },
-  { n: '2', t: 'Roll the d20', d: 'The server rolls for you and only you can see it. Nobody can cheat the dice.' },
-  { n: '3', t: 'Use a bonus', d: 'Look at your roll, then spend stars on a bonus if you want one. Or keep your roll.' },
+  { n: '1', t: 'Pick your move', d: 'Charm, Hustle, Lie or use Sense. Face every scenario with your best weapon.' },
+  { n: '2', t: 'Roll the dice', d: 'Lock in to your choice and roll the dice. Nobody can cheat the game.' },
+  { n: '3', t: 'Use a bonus', d: "If you don't like your roll, spend stars on a bonus if you want one. Or keep your roll." },
 ];
 
 // the bonuses players can use right now
