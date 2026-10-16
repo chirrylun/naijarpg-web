@@ -4,7 +4,6 @@ import { PlayerBar } from './PlayerBar';
 import { ScenarioCard } from './ScenarioCard';
 import { ChoicePanel } from './ChoicePanel';
 import { RoundReveal } from './RoundReveal';
-import { RoundTimer } from './RoundTimer';
 import { useGame } from '@/stores/game';
 import { useSession } from '@/stores/session';
 import type { RoomState } from '@/types';
@@ -12,7 +11,6 @@ import type { RoomState } from '@/types';
 export function EncounterRoom({ room }: { room: RoomState }) {
   const myId = useSession((s) => s.session?.user.id);
   const result = useGame((s) => s.result);
-  const deadline = useGame((s) => s.localDeadline);
   const me = room.players.find((p) => p.userId === myId);
 
   return (
@@ -26,7 +24,6 @@ export function EncounterRoom({ room }: { room: RoomState }) {
         </span>
       </div>
       <PlayerBar room={room} myId={myId} />
-      {!result && <RoundTimer deadline={deadline} totalMs={room.roundSeconds * 1000} locked={!!me?.acted} />}
       <ScenarioCard room={room} />
       {result ? (
         <RoundReveal room={room} result={result} myId={myId} />

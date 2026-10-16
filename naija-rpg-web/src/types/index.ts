@@ -90,6 +90,8 @@ export type RollRow = {
   approach: Approach;
   starPlay: StarPlay | null;
   die: number;
+  dice: number[]; 
+  shielded: boolean;
   modifier: number;
   starBonus: number;
   total: number;
@@ -103,6 +105,7 @@ export type RoundResult = {
   same: boolean;
   winnerTeam: number | null;
   headline: string;
+  blocked: { userId: string; label: string }[];
   effects: { userId: string; mod: number; label: string }[];
   ends: boolean;
   revealMs: number;

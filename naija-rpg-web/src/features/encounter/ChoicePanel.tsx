@@ -11,6 +11,8 @@ import { emitAck } from '@/lib/socket';
 import { useToast } from '@/stores/toast';
 import { cn } from '@/lib/utils';
 import type { Approach, RoomState, StarPlay } from '@/types';
+import { RoundTimer } from './RoundTimer';
+import { useGame } from '@/stores/game';
 
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 
@@ -20,6 +22,7 @@ export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }
   const [approach, setApproach] = useState<Approach | null>(null);
   const [star, setStar] = useState<StarPlay | null>(null);
   const [busy, setBusy] = useState(false);
+  const deadline = useGame((s) => s.localDeadline);
   const locked = acted || busy;
   const status = room.players.find((p) => p.userId === me?.id)?.status ?? null;
 
@@ -36,7 +39,10 @@ export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }
 
   return (
     <div className="space-y-4">
-      {status && (
+  <div className="sticky top-14 z-30 -mx-2 rounded-2xl border border-line bg-night/95 px-3 py-2 backdrop-blur">
+    <RoundTimer deadline={deadline} totalMs={room.roundSeconds * 1000} locked={locked} />
+  </div>
+  {status && (
         <div className={cn('rounded-2xl border px-3 py-2 text-sm font-bold', status.mod > 0 ? 'border-brand/40 bg-brand/10 text-brand' : 'border-danger/40 bg-danger/10 text-danger')}>
           {status.mod > 0 ? '🔥' : '😵'} {status.label}: {status.mod > 0 ? '+' : ''}
           {status.mod} on your roll this scene

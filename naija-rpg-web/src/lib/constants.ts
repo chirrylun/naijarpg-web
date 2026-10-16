@@ -19,9 +19,9 @@ export const TIERS: Record<Tier, { label: string; emoji: string; text: string; c
 };
 
 export const STAR_PLAYS: Record<StarPlay, { label: string; cost: number; blurb: string }> = {
-  reroll: { label: 'Reroll', cost: 1, blurb: 'Roll twice, keep the better' },
+  reroll: { label: 'Reroll', cost: 1, blurb: 'Roll twice, keep the higher' },
   nudge: { label: 'Nudge', cost: 2, blurb: '+2 to your roll' },
-  shield: { label: 'Shield', cost: 2, blurb: 'Disaster becomes Struggle' },
+  shield: { label: 'Shield', cost: 2, blurb: 'If you miss, no penalty carries over' },
 };
 
 export const MODE_CARDS: { id: string; mode: Mode; format: Format; name: string; tag: string; blurb: string }[] = [
