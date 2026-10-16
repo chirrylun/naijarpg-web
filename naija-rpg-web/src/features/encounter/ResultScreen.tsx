@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/Button';
+import { Button, btn } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/features/avatar/Avatar';
 import { SaveProgress } from '@/features/account/SaveProgress';
-import { requestChat } from '../chat/requestChat';
+import { requestChat } from '@/features/chat/requestChat';
 import { useMe } from '@/hooks/useMe';
 import { errorText } from '@/lib/api';
 import { OUTCOME_COPY } from '@/lib/constants';
@@ -30,6 +31,7 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
   const others = finished.results.filter((r) => r.userId !== myId);
   const copy = OUTCOME_COPY[mine?.result ?? 'draw'];
   const won = mine?.result === 'win' || mine?.result === 'success';
+  const ending = mine ? finished.endings?.[mine.result] : undefined;
 
   const share = `${won ? 'I just won' : 'I just played'} "${room.scenario.title}" on Naija RPG 🎲 Think you can beat me? ${siteUrl()}/${me?.referral_code ? `?ref=${me.referral_code}` : ''}`;
 
@@ -42,7 +44,7 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
       useToast.getState().push(errorText(e), 'bad');
     }
   }
-  function again() {
+  function playAgain() {
     useGame.getState().reset();
     router.push('/play');
   }
@@ -55,6 +57,13 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
         {mine && <p className="mt-1 font-display text-xl font-extrabold text-gold">+{mine.points} points</p>}
         <p className="mt-1 text-sm text-mute">{room.scenario.title}</p>
       </motion.div>
+
+      {ending && (
+        <Card className="border-gold/30 bg-gold/5">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-gold">How it ended</div>
+          <p className="mt-1 leading-relaxed text-ink/90">{ending}</p>
+        </Card>
+      )}
 
       <Card className="space-y-2">
         {finished.results.map((r) => {
@@ -71,11 +80,11 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
       </Card>
 
       <div className="grid grid-cols-2 gap-3">
-        <Button size="lg" onClick={rematch} disabled={asked} loading={false}>
+        <Button size="lg" onClick={rematch} disabled={asked}>
           {asked ? `Waiting ${ready.length}/${room.capacity}` : 'Rematch'}
         </Button>
-        <Button size="lg" variant="ghost" onClick={again}>
-          Play again
+        <Button size="lg" variant="ghost" onClick={playAgain}>
+          New game
         </Button>
       </div>
       <a href={whatsappUrl(share)} target="_blank" rel="noreferrer" className="flex h-12 items-center justify-center rounded-2xl bg-[#25d366] font-display font-extrabold text-[#04110b]">
@@ -101,6 +110,10 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
           </Button>
         </Card>
       )}
+
+      <Link href="/" onClick={() => useGame.getState().reset()} className={btn('ghost', 'md', 'w-full')}>
+        ← Back to home
+      </Link>
       <SaveProgress open={saveOpen} onClose={() => setSaveOpen(false)} />
     </div>
   );

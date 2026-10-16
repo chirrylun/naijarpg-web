@@ -26,41 +26,9 @@ export type TopPlayer = { rank: number; username: string; avatar: Look; score: n
 export type Landing = { liveUsers: number; totalVisits: number; topPlayers: TopPlayer[] };
 export type Daily = { date: string; scenario: { id: string; title: string; tagline: string; modes: Mode[] } };
 
-export type RoomPlayer = { userId: string; username: string; avatar: Look; team: number; acted: boolean };
-export type RoomState = {
-  id: string;
-  code: string | null;
-  mode: Mode;
-  format: Format;
-  status: 'waiting' | 'active' | 'finished';
-  capacity: number;
-  round: number;
-  maxRounds: number;
-  deadline: number | null;
-  scenario: { id: string; title: string; tagline: string };
-  scene: null | { key: string; title: string; text: string; choices: { approach: Approach; label: string }[] };
-  players: RoomPlayer[];
-};
-export type RollRow = {
-  userId: string;
-  team: number;
-  round: number;
-  sceneKey: string;
-  approach: Approach;
-  starPlay: StarPlay | null;
-  die: number;
-  modifier: number;
-  starBonus: number;
-  total: number;
-  tier: Tier;
-};
-export type RoundResult = { round: number; rolls: RollRow[]; tier: Tier; winnerTeam: number | null; ends: boolean };
+
 export type Outcome = 'win' | 'loss' | 'draw' | 'success' | 'fail';
-export type FinishedPayload = {
-  roomId: string;
-  mode: Mode;
-  results: { userId: string; username: string; team: number; result: Outcome; points: number }[];
-};
+
 export type InviteInfo = {
   code: string;
   mode: Mode;
@@ -82,5 +50,67 @@ export type AvatarItem = {
 
 export type ChatPerson = { id: string; username: string; avatar: Look };
 export type ChatRequest = { id: string; createdAt: string; from: ChatPerson };
-export type Conversation = { id: string; with: ChatPerson };
+
 export type Message = { id: number; sender_id: string; body: string; created_at: string };
+
+
+
+export type Kind = 'decisive' | 'both_succeed' | 'both_fail' | 'tie' | 'all_pass' | 'mixed' | 'all_fail';
+export type Standing = 'won' | 'lost' | 'level' | 'crew';
+export type Status = { mod: number; label: string } | null;
+
+export type RoomPlayer = { userId: string; username: string; avatar: Look; team: number; acted: boolean; status: Status };
+export type RoomState = {
+  id: string;
+  code: string | null;
+  mode: Mode;
+  format: Format;
+  status: 'waiting' | 'active' | 'finished';
+  capacity: number;
+  round: number;
+  maxRounds: number;
+  roundSeconds: number;
+  remainingMs: number | null;
+  recap: string | null;
+  scenario: { id: string; title: string; tagline: string };
+  scene: null | {
+    key: string;
+    title: string;
+    text: string;
+    stakes: string | null;
+    choices: { approach: Approach; label: string }[];
+  };
+  players: RoomPlayer[];
+};
+export type RollRow = {
+  userId: string;
+  team: number;
+  round: number;
+  sceneKey: string;
+  approach: Approach;
+  starPlay: StarPlay | null;
+  die: number;
+  modifier: number;
+  starBonus: number;
+  total: number;
+  tier: Tier;
+  standing: Standing;
+};
+export type RoundResult = {
+  round: number;
+  rolls: RollRow[];
+  kind: Kind;
+  same: boolean;
+  winnerTeam: number | null;
+  headline: string;
+  effects: { userId: string; mod: number; label: string }[];
+  ends: boolean;
+  revealMs: number;
+};
+export type FinishedPayload = {
+  roomId: string;
+  mode: Mode;
+  results: { userId: string; username: string; team: number; result: Outcome; points: number }[];
+  endings: Partial<Record<Outcome, string>>;
+};
+export type Conversation = { id: string; with: ChatPerson; last: Message | null };

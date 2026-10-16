@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { ROUND_SECONDS } from '@/lib/constants';
 import type { FinishedPayload, RoomState, RoundResult } from '@/types';
 
 type GameState = {
@@ -24,14 +23,13 @@ export const useGame = create<GameState>((set) => ({
   setRoom: (room) =>
     set((s) => {
       const sameRoom = s.room?.id === room.id;
-      const sameRound = sameRoom && s.room?.round === room.round && s.room?.status === room.status;
       return {
         room,
         result: null,
         finished: sameRoom ? s.finished : null,
         rematchReady: sameRoom ? s.rematchReady : [],
-        // The server clock may differ from the phone's, so each new round gets a local 30s countdown
-        localDeadline: room.status !== 'active' ? null : sameRound ? s.localDeadline : Date.now() + ROUND_SECONDS * 1000,
+        // the server sends time remaining, so this stays right even on a phone with a wrong clock
+        localDeadline: room.status === 'active' && room.remainingMs != null ? Date.now() + room.remainingMs : null,
       };
     }),
   setResult: (result) => set({ result }),

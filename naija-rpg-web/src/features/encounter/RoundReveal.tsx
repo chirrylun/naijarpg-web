@@ -3,60 +3,70 @@
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/Card';
 import { Dice } from './Dice';
-import { APPROACHES, RESULT_DELAY_MS, TIERS } from '@/lib/constants';
+import { APPROACHES, TIERS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import type { RoomState, RoundResult } from '@/types';
+import type { RoomState, RoundResult, Standing } from '@/types';
+
+const STANDING: Record<Standing, { text: string; cls: string } | null> = {
+  won: { text: 'Took the scene', cls: 'text-brand' },
+  lost: { text: 'Lost the scene', cls: 'text-danger' },
+  level: { text: 'Level', cls: 'text-sky' },
+  crew: null,
+};
 
 export function RoundReveal({ room, result, myId }: { room: RoomState; result: RoundResult; myId?: string }) {
-  const myTeam = room.players.find((p) => p.userId === myId)?.team;
   const name = (id: string) => (id === myId ? 'You' : room.players.find((p) => p.userId === id)?.username ?? 'Player');
-  const tier = TIERS[result.tier];
-
-  const headline =
-    room.mode === 'coop'
-      ? `The crew's result: ${tier.label} ${tier.emoji}`
-      : result.winnerTeam === null
-        ? 'Dead heat. Nobody blinked.'
-        : result.winnerTeam === myTeam
-          ? 'Your side takes the scene! 🔥'
-          : 'They take this scene 😤';
+  const many = result.rolls.length > 2;
 
   return (
     <div className="space-y-4">
-      <div className={cn('grid gap-3', result.rolls.length > 2 ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2')}>
+      <div className={cn('grid gap-3', many ? 'grid-cols-2' : 'grid-cols-1 min-[420px]:grid-cols-2')}>
         {result.rolls.map((r, i) => {
           const t = TIERS[r.tier];
+          const st = STANDING[r.standing];
           return (
-            <Card key={r.userId} className="flex flex-col items-center gap-1 text-center">
+            <Card key={r.userId} className="flex flex-col items-center gap-1 px-2 text-center">
               <div className="text-sm font-bold">{name(r.userId)}</div>
               <div className="text-xs text-mute">
                 {APPROACHES[r.approach].emoji} {APPROACHES[r.approach].label}
               </div>
-              <Dice value={r.die} delay={i * 250} />
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 + i * 0.15 }} className="space-y-1">
+              <Dice value={r.die} delay={i * 250} size={many ? 84 : 104} />
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 + i * 0.15 }} className="space-y-1">
                 <div className="text-sm text-mute">
-                  {r.die} + {r.modifier}
+                  {r.die} {r.modifier >= 0 ? '+' : '−'} {Math.abs(r.modifier)}
                   {r.starBonus ? ` + ${r.starBonus}★` : ''} = <span className="font-extrabold text-ink">{r.total}</span>
                 </div>
                 {r.starPlay && <div className="text-xs font-bold text-gold">★ {r.starPlay}</div>}
                 <div className={cn('inline-block rounded-full border px-3 py-0.5 text-xs font-extrabold', t.chip)}>
                   {t.emoji} {t.label}
                 </div>
+                {st && <div className={cn('text-xs font-extrabold uppercase tracking-wide', st.cls)}>{st.text}</div>}
               </motion.div>
             </Card>
           );
         })}
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.9 }} className="text-center font-display text-xl font-extrabold">
-        {headline}
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.1 }} className="text-center font-display text-lg font-extrabold leading-snug">
+        {result.headline}
       </motion.div>
 
+      {result.effects.length > 0 && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }} className="flex flex-wrap justify-center gap-2">
+          {result.effects.map((e) => (
+            <span key={e.userId} className={cn('rounded-full border px-3 py-1 text-xs font-bold', e.mod > 0 ? 'border-brand/40 bg-brand/10 text-brand' : 'border-danger/40 bg-danger/10 text-danger')}>
+              {name(e.userId)}: {e.label} {e.mod > 0 ? '+' : ''}
+              {e.mod} next roll
+            </span>
+          ))}
+        </motion.div>
+      )}
+
       <div className="space-y-1">
-        <div className="h-1.5 overflow-hidden rounded-full bg-panel-2">
-          <motion.div className="h-full bg-brand" initial={{ width: '0%' }} animate={{ width: '100%' }} transition={{ duration: RESULT_DELAY_MS / 1000, ease: 'linear' }} />
+        <div className="h-2 overflow-hidden rounded-full bg-panel-2">
+          <motion.div className="h-full rounded-full bg-brand" initial={{ width: '0%' }} animate={{ width: '100%' }} transition={{ duration: result.revealMs / 1000, ease: 'linear' }} />
         </div>
-        <div className="text-center text-xs text-mute">{result.ends ? 'Final result coming…' : 'Next scene coming…'}</div>
+        <div className="text-center text-xs text-mute">{result.ends ? 'The story wraps up…' : 'Next scene loading…'}</div>
       </div>
     </div>
   );

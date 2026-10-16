@@ -4,18 +4,12 @@ import type { RoomState } from '@/types';
 
 export function PlayerBar({ room, myId }: { room: RoomState; myId?: string }) {
   const myTeam = room.players.find((p) => p.userId === myId)?.team;
-  // your own side always shows first
-  const teams = [...new Set(room.players.map((p) => p.team))].sort((a, b) =>
-    a === myTeam ? -1 : b === myTeam ? 1 : a - b,
-  );
+  const teams = [...new Set(room.players.map((p) => p.team))].sort((a, b) => (a === myTeam ? -1 : b === myTeam ? 1 : a - b));
 
   return (
     <div className="flex gap-3">
       {teams.map((t) => (
-        <div
-          key={t}
-          className={cn('flex-1 rounded-2xl border p-2', t === myTeam ? 'border-brand/40 bg-brand/5' : 'border-line bg-panel')}
-        >
+        <div key={t} className={cn('flex-1 rounded-2xl border p-2', t === myTeam ? 'border-brand/40 bg-brand/5' : 'border-line bg-panel')}>
           <div className="mb-1 text-[10px] font-bold uppercase tracking-wider text-mute">
             {room.mode === 'coop' ? 'Your crew' : t === myTeam ? 'Your side' : 'Rivals'}
           </div>
@@ -29,9 +23,13 @@ export function PlayerBar({ room, myId }: { room: RoomState; myId?: string }) {
                   </div>
                   <div className="leading-tight">
                     <div className="max-w-24 truncate text-sm font-bold">{p.userId === myId ? 'You' : p.username}</div>
-                    <div className={cn('text-[11px] font-semibold', p.acted ? 'text-brand' : 'text-mute')}>
-                      {p.acted ? 'Locked in ✓' : 'Thinking…'}
-                    </div>
+                    <div className={cn('text-[11px] font-semibold', p.acted ? 'text-brand' : 'text-mute')}>{p.acted ? 'Locked in ✓' : 'Thinking…'}</div>
+                    {p.status && (
+                      <div className={cn('text-[10px] font-extrabold', p.status.mod > 0 ? 'text-brand' : 'text-danger')}>
+                        {p.status.label} {p.status.mod > 0 ? '+' : ''}
+                        {p.status.mod}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

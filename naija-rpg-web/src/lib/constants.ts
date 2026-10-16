@@ -1,8 +1,7 @@
 import type { Approach, Format, Mode, Outcome, StarPlay, Tier } from '@/types';
 
 // Keep these in sync with src/config/balance.ts on the server
-export const ROUND_SECONDS = 30;
-export const RESULT_DELAY_MS = 4500;
+
 export const REFERRAL_STARS = 10;
 
 export const APPROACHES: Record<Approach, { label: string; emoji: string }> = {
@@ -13,10 +12,10 @@ export const APPROACHES: Record<Approach, { label: string; emoji: string }> = {
 };
 
 export const TIERS: Record<Tier, { label: string; emoji: string; text: string; chip: string }> = {
-  disaster: { label: 'Disaster', emoji: '💥', text: 'text-danger', chip: 'bg-danger/15 border-danger/40 text-danger' },
-  struggle: { label: 'Struggle', emoji: '😬', text: 'text-orange-300', chip: 'bg-orange-400/15 border-orange-400/40 text-orange-300' },
-  win: { label: 'Win', emoji: '✅', text: 'text-brand', chip: 'bg-brand/15 border-brand/40 text-brand' },
-  legendary: { label: 'Legendary', emoji: '👑', text: 'text-gold', chip: 'bg-gold/15 border-gold/40 text-gold' },
+  disaster: { label: 'Botched', emoji: '💥', text: 'text-danger', chip: 'bg-danger/15 border-danger/40 text-danger' },
+  struggle: { label: 'Shaky', emoji: '😬', text: 'text-orange-300', chip: 'bg-orange-400/15 border-orange-400/40 text-orange-300' },
+  win: { label: 'Landed it', emoji: '✅', text: 'text-brand', chip: 'bg-brand/15 border-brand/40 text-brand' },
+  legendary: { label: 'Flawless', emoji: '🌟', text: 'text-gold', chip: 'bg-gold/15 border-gold/40 text-gold' },
 };
 
 export const STAR_PLAYS: Record<StarPlay, { label: string; cost: number; blurb: string }> = {

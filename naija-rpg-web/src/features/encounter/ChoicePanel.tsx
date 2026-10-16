@@ -6,10 +6,13 @@ import { StarPicker } from './StarPicker';
 import { useMe } from '@/hooks/useMe';
 import { APPROACHES } from '@/lib/constants';
 import { errorText } from '@/lib/api';
+import { fillNames } from '@/lib/narrative';
 import { emitAck } from '@/lib/socket';
 import { useToast } from '@/stores/toast';
 import { cn } from '@/lib/utils';
 import type { Approach, RoomState, StarPlay } from '@/types';
+
+const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 
 // Rendered with key={room.id:round}, so its state resets every new round
 export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }) {
@@ -18,6 +21,7 @@ export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }
   const [star, setStar] = useState<StarPlay | null>(null);
   const [busy, setBusy] = useState(false);
   const locked = acted || busy;
+  const status = room.players.find((p) => p.userId === me?.id)?.status ?? null;
 
   async function lock() {
     if (!approach) return;
@@ -32,10 +36,16 @@ export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }
 
   return (
     <div className="space-y-4">
+      {status && (
+        <div className={cn('rounded-2xl border px-3 py-2 text-sm font-bold', status.mod > 0 ? 'border-brand/40 bg-brand/10 text-brand' : 'border-danger/40 bg-danger/10 text-danger')}>
+          {status.mod > 0 ? '🔥' : '😵'} {status.label}: {status.mod > 0 ? '+' : ''}
+          {status.mod} on your roll this scene
+        </div>
+      )}
       <div className="grid gap-2">
         {room.scene?.choices.map((c) => {
           const a = APPROACHES[c.approach];
-          const mod = Math.min(me?.stats?.[c.approach] ?? 0, 3);
+          const mod = clamp(Math.min(me?.stats?.[c.approach] ?? 0, 3) + (status?.mod ?? 0), -2, 4);
           const on = approach === c.approach;
           return (
             <button
@@ -47,9 +57,12 @@ export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }
               <span className="text-2xl">{a.emoji}</span>
               <span className="flex-1">
                 <span className="block text-xs font-bold uppercase tracking-wide text-mute">{a.label}</span>
-                <span className="block font-semibold">{c.label}</span>
+                <span className="block font-semibold">{fillNames(c.label, room, me?.id)}</span>
               </span>
-              <span className="rounded-lg bg-panel-2 px-2 py-1 text-xs font-bold text-brand">+{mod}</span>
+              <span className={cn('rounded-lg bg-panel-2 px-2 py-1 text-xs font-bold', mod < 0 ? 'text-danger' : 'text-brand')}>
+                {mod >= 0 ? '+' : ''}
+                {mod}
+              </span>
             </button>
           );
         })}

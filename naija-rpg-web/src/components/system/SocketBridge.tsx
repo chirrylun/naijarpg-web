@@ -9,7 +9,7 @@ import { useGame } from '@/stores/game';
 import { useSession } from '@/stores/session';
 import { useToast } from '@/stores/toast';
 import { useChatUi } from '@/stores/chatUi';
-import type { ChatPerson, FinishedPayload, Message, Profile, RoomState, RoundResult } from '@/types';
+import type { ChatPerson, Conversation, FinishedPayload, Message, Profile, RoomState, RoundResult } from '@/types';
 
 export function SocketBridge() {
   const router = useRouter();
@@ -72,13 +72,23 @@ export function SocketBridge() {
       qc.invalidateQueries({ queryKey: ['chat', 'conversations'] });
     };
     const onDm = (m: Message & { conversationId: string }) => {
-      qc.setQueryData<Message[]>(['chat', 'messages', m.conversationId], (old) =>
-        old && !old.some((x) => x.id === m.id) ? [...old, m] : old,
-      );
-      const me = useSession.getState().session?.user.id;
-      const ui = useChatUi.getState();
-      if (m.sender_id !== me && !(ui.open && ui.convId === m.conversationId)) toast('New message 💬', 'info');
-    };
+  qc.setQueryData<Message[]>(['chat', 'messages', m.conversationId], (old) =>
+    old && !old.some((x) => x.id === m.id) ? [...old, m] : old,
+  );
+  // keep the chat list's preview and ordering fresh without refetching
+  qc.setQueryData<Conversation[]>(['chat', 'conversations'], (old) =>
+    old
+      ?.map((c) => (c.id === m.conversationId ? { ...c, last: m } : c))
+      .sort((a, b) => (b.last?.id ?? 0) - (a.last?.id ?? 0)),
+  );
+  const me = useSession.getState().session?.user.id;
+  const ui = useChatUi.getState();
+  const viewing = ui.open && ui.convId === m.conversationId;
+  if (m.sender_id !== me && !viewing) {
+    ui.bump(m.conversationId);
+    toast('New message 💬', 'info');
+  }
+};
 
     s.on('connect', onConnect);
     s.on('disconnect', onDisconnect);
