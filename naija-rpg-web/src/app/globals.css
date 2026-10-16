@@ -1,26 +1,35 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-night: #08100d;
+  --color-panel: #101a16;
+  --color-panel-2: #182520;
+  --color-line: #25382f;
+  --color-ink: #f2f7f4;
+  --color-mute: #8aa396;
+  --color-brand: #1fc77e;
+  --color-brand-deep: #0e9a5d;
+  --color-gold: #ffc233;
+  --color-gold-deep: #c78f00;
+  --color-danger: #ff5f5f;
+  --color-sky: #5cb8ff;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html { color-scheme: dark; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-night);
+  background-image:
+    radial-gradient(70% 45% at 50% -8%, rgba(31, 199, 126, 0.22), transparent 70%),
+    radial-gradient(40% 30% at 100% 10%, rgba(255, 194, 51, 0.1), transparent 70%);
+  background-attachment: fixed;
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
 }
+
+::selection { background: var(--color-brand); color: #04110b; }

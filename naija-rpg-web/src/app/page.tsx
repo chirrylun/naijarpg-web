@@ -1,69 +1,86 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/lib/api';
+import { useConn } from '@/stores/connection';
+import { useSession } from '@/stores/session';
+import { useToast } from '@/stores/toast';
+import { Button } from '@/components/ui/Button';
+import { StatsStrip } from '@/features/landing/StatsStrip';
+import { TopThree } from '@/features/landing/TopThree';
+import { HeroCard } from '@/features/landing/HeroCard';
+import { HowItWorks } from '@/features/landing/HowItWorks';
+import type { Landing } from '@/types';
 
 export default function Home() {
+  const router = useRouter();
+  const qc = useQueryClient();
+  const live = useConn((s) => s.liveUsers);
+  const [starting, setStarting] = useState(false);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['landing'],
+    queryFn: () => api<Landing>('/api/stats/landing', { auth: false }),
+    refetchInterval: 30_000,
+  });
+
+  useEffect(() => {
+    // remember a referral link until a player exists
+    const ref = new URLSearchParams(window.location.search).get('ref');
+    if (ref) localStorage.setItem('nrpg_ref', ref.toUpperCase());
+    // count one visit per browser session
+    if (!sessionStorage.getItem('nrpg_visit')) {
+      sessionStorage.setItem('nrpg_visit', '1');
+      api('/api/stats/visit', { method: 'POST', auth: false })
+        .then(() => qc.invalidateQueries({ queryKey: ['landing'] }))
+        .catch(() => {});
+    }
+  }, [qc]);
+
+  async function play() {
+    setStarting(true);
+    try {
+      await useSession.getState().ensureSession();
+      router.push('/play');
+    } catch {
+      setStarting(false);
+      useToast.getState().push("Couldn't start. Check your network and try again.", 'bad');
+    }
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="space-y-10">
+      <section className="grid items-center gap-8 pt-4 md:grid-cols-2">
+        <div>
+          <p className="mb-3 inline-block rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand">
+            Free in your browser
           </p>
+          <h1 className="font-display text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl">
+            Live the gist.
+            <br />
+            <span className="text-brand">Roll the dice.</span>
+          </h1>
+          <p className="mt-4 max-w-md text-lg text-mute">
+            NEPA don take light. Your guy dey stream on your data. Wetin you go do? Play 2-minute Naija encounters against your friends, or with them.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button size="lg" loading={starting} onClick={play}>
+              Play now
+            </Button>
+            <Button size="lg" variant="ghost" onClick={play}>
+              Challenge a friend
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        <HeroCard />
+      </section>
+
+      <StatsStrip live={live ?? data?.liveUsers ?? 0} visits={data?.totalVisits ?? 0} topScore={data?.topPlayers[0]?.score ?? 0} />
+      <TopThree players={data?.topPlayers ?? []} loading={isLoading} />
+      <HowItWorks />
+      <footer className="pb-4 text-center text-xs text-mute">Naija RPG · Roll responsibly 🎲</footer>
     </div>
   );
 }

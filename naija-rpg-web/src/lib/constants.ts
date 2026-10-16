@@ -1,0 +1,47 @@
+import type { Approach, Format, Mode, Outcome, StarPlay, Tier } from '@/types';
+
+// Keep these in sync with src/config/balance.ts on the server
+export const ROUND_SECONDS = 30;
+export const RESULT_DELAY_MS = 4500;
+export const REFERRAL_STARS = 10;
+
+export const APPROACHES: Record<Approach, { label: string; emoji: string }> = {
+  charm: { label: 'Charm', emoji: '😎' },
+  hustle: { label: 'Hustle', emoji: '💪🏾' },
+  gragra: { label: 'Gra-Gra', emoji: '🗣️' },
+  wisdom: { label: 'Wisdom', emoji: '🧠' },
+};
+
+export const TIERS: Record<Tier, { label: string; emoji: string; text: string; chip: string }> = {
+  disaster: { label: 'Disaster', emoji: '💥', text: 'text-danger', chip: 'bg-danger/15 border-danger/40 text-danger' },
+  struggle: { label: 'Struggle', emoji: '😬', text: 'text-orange-300', chip: 'bg-orange-400/15 border-orange-400/40 text-orange-300' },
+  win: { label: 'Win', emoji: '✅', text: 'text-brand', chip: 'bg-brand/15 border-brand/40 text-brand' },
+  legendary: { label: 'Legendary', emoji: '👑', text: 'text-gold', chip: 'bg-gold/15 border-gold/40 text-gold' },
+};
+
+export const STAR_PLAYS: Record<StarPlay, { label: string; cost: number; blurb: string }> = {
+  reroll: { label: 'Reroll', cost: 1, blurb: 'Roll twice, keep the better' },
+  nudge: { label: 'Nudge', cost: 2, blurb: '+2 to your roll' },
+  shield: { label: 'Shield', cost: 2, blurb: 'Disaster becomes Struggle' },
+};
+
+export const MODE_CARDS: { id: string; mode: Mode; format: Format; name: string; tag: string; blurb: string }[] = [
+  { id: 'rival-1v1', mode: 'rival', format: '1v1', name: 'Face Off', tag: '1v1', blurb: 'Head to head. Highest roll wins the scene.' },
+  { id: 'coop-1v1', mode: 'coop', format: '1v1', name: 'Link Up', tag: '1v1 co-op', blurb: 'You and a friend against the wahala.' },
+  { id: 'team-2v2', mode: 'team', format: '2v2', name: 'Squad Wahala', tag: '2v2', blurb: 'Two teams. One scene. Zero mercy.' },
+  { id: 'coop-2v2', mode: 'coop', format: '2v2', name: 'Full Squad', tag: '2v2 co-op', blurb: 'Four people, one disaster to survive.' },
+];
+
+export const OUTCOME_COPY: Record<Outcome, { title: string; emoji: string; color: string }> = {
+  win: { title: 'You won!', emoji: '🏆', color: 'text-gold' },
+  loss: { title: 'Not your day', emoji: '😤', color: 'text-danger' },
+  draw: { title: 'Dead heat', emoji: '🤝', color: 'text-sky' },
+  success: { title: 'You survived!', emoji: '🎉', color: 'text-brand' },
+  fail: { title: 'Wahala won', emoji: '💀', color: 'text-danger' },
+};
+
+export const RARITY_COLOR: Record<string, string> = {
+  common: 'text-mute',
+  rare: 'text-sky',
+  epic: 'text-fuchsia-300',
+};
