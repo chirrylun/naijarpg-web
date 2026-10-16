@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
+import { Suspense } from 'react';
 import { Providers } from './providers';
 import { Navbar } from '@/components/layout/NavBar';
 import { BottomNav } from '@/components/layout/BottomNav';
@@ -33,13 +34,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${body.variable} ${heading.variable} min-h-dvh font-sans antialiased`}>
-        <Providers>
-          <Navbar />
-          <main className="mx-auto w-full max-w-5xl px-4 pb-28 pt-5 sm:pb-12">{children}</main>
-          <BottomNav />
-          <ChatDock />
-          <Toaster />
-        </Providers>
+       <Providers>
+  <Suspense fallback={null}>
+    <Navbar />
+  </Suspense>
+  <main className="mx-auto w-full max-w-5xl px-4 pb-28 pt-5 sm:pb-12">{children}</main>
+  <Suspense fallback={null}>
+    <BottomNav />
+  </Suspense>
+  <ChatDock />
+  <Toaster />
+</Providers>
       </body>
     </html>
   );
