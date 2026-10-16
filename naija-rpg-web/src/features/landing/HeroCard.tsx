@@ -20,7 +20,7 @@ export function HeroCard() {
         <p className="text-xs font-bold uppercase tracking-wider text-mute">Market street</p>
         <h3 className="mt-1 font-display text-xl font-extrabold">The agbero wants his money</h3>
         <p className="mt-2 text-sm text-ink/80">
-          You just parked your car. A street boss walks up and says you must pay him first. What do you do?
+          You just parked your car at your junction. A group of agberos walks up and says you must pay him first. What do you do?
         </p>
         <div className="mt-3 space-y-2">
           {MOVES.map((m) => (
