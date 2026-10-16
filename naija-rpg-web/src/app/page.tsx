@@ -58,12 +58,12 @@ export default function Home() {
             Free in your browser
           </p>
           <h1 className="font-display text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl">
-            Live the gist.
+            Pick a move.
             <br />
             <span className="text-brand">Roll the dice.</span>
           </h1>
           <p className="mt-4 max-w-md text-lg text-mute">
-            NEPA don take light. Your guy dey stream on your data. Wetin you go do? Play 2-minute Naija encounters against your friends, or with them.
+            A street boss wants your money. What do you do? Play short 2-minute stories from Nigerian life, against your friends or with them.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button size="lg" loading={starting} onClick={play}>
