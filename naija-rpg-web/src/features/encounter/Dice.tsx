@@ -52,7 +52,7 @@ const FACES: Face[] = (() => {
     n += 1;
   });
   faces.forEach((f) => {
-    f.shade = 0.9 + (((f.value * 37) % 11) / 11) * 0.2; // slight per-face shading so the facets read
+   f.shade = 0.84 + (((f.value * 37) % 11) / 11) * 0.16;
   });
   return faces;
 })();
@@ -67,9 +67,9 @@ const restMatrix = (value: number) => {
 
 const TRI = 'polygon(50% 0%, 100% 100%, 0% 100%)';
 const PALETTE = {
-  normal: { a: '#2fe39a', b: '#16a569', edge: '#0a3b27', ink: '#04110b' },
-  crit: { a: '#ffe08a', b: '#f2b51f', edge: '#7a5600', ink: '#241800' },
-  fumble: { a: '#ff8d8d', b: '#e84f4f', edge: '#6e1818', ink: '#2a0606' },
+  normal: { a: '#ffffff', b: '#e8e4da', edge: '#a8a396', ink: '#17171c' },
+  crit: { a: '#fffbe8', b: '#f5e3a6', edge: '#b8963a', ink: '#7a4a00' },
+  fumble: { a: '#fff1f1', b: '#f2cccc', edge: '#b58a8a', ink: '#a31212' },
 };
 const DUR = 1600;
 
