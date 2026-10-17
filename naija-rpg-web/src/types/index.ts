@@ -1,4 +1,4 @@
-export type Approach = 'charm' | 'gragra' | 'lie' | 'wisdom';
+export type Approach = 'charm' | 'hustle' | 'gragra' | 'wisdom';
 export type Tier = 'disaster' | 'struggle' | 'win' | 'legendary';
 export type Mode = 'rival' | 'coop' | 'team';
 export type Format = '1v1' | '2v2';
