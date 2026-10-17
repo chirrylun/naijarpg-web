@@ -257,15 +257,37 @@ export function FriendsArt({ className }: { className?: string }) {
   );
 }
 
+/** Solo: one player walking towards the finish flag. Same figure style and size as the other cards. */
+export function SoloArt({ className }: { className?: string }) {
+  return (
+    <>
+      <SceneStyles />
+      <svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMax meet" className={className} role="img" aria-label="One player walking towards a flag">
+        <rect x={0} y={118} width={200} height={12} fill={FLOOR} />
+        <line x1={20} y1={124} x2={150} y2={124} stroke="#2e4a3e" strokeWidth={1.5} strokeDasharray="5 5" />
+        <g transform="translate(70 118) scale(1.15)">
+          <Person pose="walk" skin="#8a5a3c" top="#1fc77e" bottom="#26324f" shoes="#f5f5f5" head="cap" headColor="#1c2733" />
+        </g>
+        {/* finish flag */}
+        <line x1={160} y1={118} x2={160} y2={72} stroke="#cfd8d3" strokeWidth={2} strokeLinecap="round" />
+        <path d="M160 72 L184 80 L160 90 Z" fill="#ffc233" />
+        <g transform="translate(100 16) scale(0.6)">
+          <polygon className="nrpg-pulse" points="0,-12 3.5,-4.5 12,-3.5 5.8,2 7.5,10.5 0,6.3 -7.5,10.5 -5.8,2 -12,-3.5 -3.5,-4.5" fill="#ffc233" />
+        </g>
+      </svg>
+    </>
+  );
+}
+
 /** Stage that sits on top of a mode card. `mode` is the MODE_CARDS mode. */
-export function ModeArt({ mode }: { mode: string }) {
+export function ModeArt({ mode, solo }: { mode: string; solo?: boolean }) {
   const art = 'relative mx-auto block h-24 w-full sm:h-28';
   return (
     <div className="sim-sky relative overflow-hidden">
       <div className="bg-ankara mask-fade-down pointer-events-none absolute inset-0 opacity-[0.07]" />
       {/* full-width ground so the floor runs edge to edge whatever the card width */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[9.2%]" style={{ background: FLOOR }} />
-      {mode === 'coop' ? <FriendsArt className={art} /> : <FaceOffArt className={art} />}
+      {solo ? <SoloArt className={art} /> : mode === 'coop' ? <FriendsArt className={art} /> : <FaceOffArt className={art} />}
     </div>
   );
 }

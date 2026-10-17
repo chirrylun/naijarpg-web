@@ -147,7 +147,7 @@ export default function PlayPage() {
                 picked === m.id ? 'border-brand bg-brand/10 shadow-[0_0_0_1px_var(--color-brand)]' : 'border-line bg-panel hover:border-brand/40',
               )}
             >
-              <ModeArt mode={m.mode} />
+              <ModeArt mode={m.mode} solo={m.solo} />
               <div className="p-3.5 sm:p-4">
                 <div className="text-xs font-bold uppercase tracking-wide text-brand">{m.tag}</div>
                 <div className="font-display text-lg font-extrabold">{m.name}</div>

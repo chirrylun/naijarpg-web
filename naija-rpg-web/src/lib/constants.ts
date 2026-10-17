@@ -1,4 +1,4 @@
-import type { Approach, Format, Mode, Outcome, StarPlay, Tier } from '@/types';
+import type { Approach, Format, Mode, Outcome, StarPlay, Tier } from '../types';
 
 // Keep these in sync with src/config/balance.ts on the server
 
