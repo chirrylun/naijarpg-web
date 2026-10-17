@@ -299,7 +299,7 @@ export default function Home() {
           <div className="relative z-10 grid items-center gap-7 px-4 pt-7 sm:px-6 md:grid-cols-2 md:gap-8 md:px-10 md:pt-12">
             <div className="min-w-0">
               <p className="mb-3 inline-block rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand">
-                Free in your browser
+                Play in your browser
               </p>
               <h1 className="font-display text-4xl font-extrabold leading-[1.04] tracking-tight min-[400px]:text-5xl sm:text-6xl">
                 Life happens.
