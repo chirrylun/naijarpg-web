@@ -8,7 +8,7 @@ import { emitAck } from '@/lib/socket';
 import { copyText, siteUrl, whatsappUrl } from '@/lib/utils';
 import { useGame } from '@/stores/game';
 import { useToast } from '@/stores/toast';
-import type { RoomState } from '@/types';
+import type { RoomState } from '../../types';
 
 export function WaitingRoom({ room }: { room: RoomState }) {
   const router = useRouter();

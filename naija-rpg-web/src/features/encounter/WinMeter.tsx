@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { RoomState } from '@/types';
+import type { RoomState } from '../../types';
 
 /** One quiet line: what you are playing for, and the story bonus. */
 export function WinMeter({ room, myId }: { room: RoomState; myId?: string }) {

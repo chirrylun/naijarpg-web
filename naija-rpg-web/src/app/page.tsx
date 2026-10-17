@@ -16,7 +16,7 @@ import { StatsStrip } from '@/features/landing/StatsStrip';
 import { TopThree } from '@/features/landing/TopThree';
 import { HeroCard } from '@/features/landing/HeroCard';
 import { HowItWorks } from '@/features/landing/HowItWorks';
-import type { Landing } from '@/types';
+import type { Landing } from '../types';
 
 // Places players end up in. Swap the hooks for your real scenarios any time.
 const PLACES = [

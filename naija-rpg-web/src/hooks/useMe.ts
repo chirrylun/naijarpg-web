@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useSession } from '@/stores/session';
-import type { Profile } from '@/types';
+import type { Profile } from '../types';
 
 export function useMe() {
   const userId = useSession((s) => s.session?.user.id);

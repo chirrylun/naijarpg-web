@@ -10,7 +10,7 @@ import { MarkChips } from './StoryBits';
 import { WinMeter } from './WinMeter';
 import { useGame } from '@/stores/game';
 import { useSession } from '@/stores/session';
-import type { RoomState } from '@/types';
+import type { RoomState } from '../../types';
 
 export function EncounterRoom({ room }: { room: RoomState }) {
   const myId = useSession((s) => s.session?.user.id);

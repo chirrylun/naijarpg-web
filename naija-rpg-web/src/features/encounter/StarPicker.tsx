@@ -1,6 +1,6 @@
 import { STAR_PLAYS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import type { StarPlay } from '@/types';
+import type { StarPlay } from '../../types';
 
 export function StarPicker({ value, onChange, balance }: { value: StarPlay | null; onChange: (v: StarPlay | null) => void; balance: number }) {
   return (

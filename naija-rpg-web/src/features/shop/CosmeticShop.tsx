@@ -10,7 +10,7 @@ import { api, errorText } from '@/lib/api';
 import { RARITY_COLOR } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/stores/toast';
-import type { AvatarItem, Look } from '@/types';
+import type { AvatarItem, Look } from '../../types';
 
 const SLOTS: { id: AvatarItem['slot']; label: string }[] = [
   { id: 'outfit', label: 'Outfits' },

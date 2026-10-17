@@ -49,7 +49,7 @@ export const OUTCOME_COPY: Record<Outcome, { title: string; emoji: string; color
   loss: { title: 'You lost this time', emoji: '😤', color: 'text-danger' },
   draw: { title: 'It is a tie', emoji: '🤝', color: 'text-sky' },
   success: { title: 'You made it!', emoji: '🎉', color: 'text-brand' },
-  fail: { title: 'The problem won', emoji: '💀', color: 'text-danger' },
+  fail: { title: 'Better luck next time', emoji: '💀', color: 'text-danger' },
 };
 
 export const RARITY_COLOR: Record<string, string> = {

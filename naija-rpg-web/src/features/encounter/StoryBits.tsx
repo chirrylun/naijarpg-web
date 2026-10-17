@@ -1,4 +1,4 @@
-import type { MarkInfo } from '@/types';
+import type { MarkInfo } from '../../types';
 
 /** Shared story state, kept quiet: plain words, at most two */
 export function MarkChips({ marks }: { marks: MarkInfo[] }) {

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Avatar } from '@/features/avatar/Avatar';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { cn } from '@/lib/utils';
-import type { TopPlayer } from '@/types';
+import type { TopPlayer } from '../../types';
 
 const MEDAL = ['🥇', '🥈', '🥉'];
 

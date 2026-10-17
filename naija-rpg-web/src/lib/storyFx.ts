@@ -1,5 +1,5 @@
 import { LUCK } from '@/lib/constants';
-import type { MarkWho, RoomState, SceneChoice } from '@/types';
+import type { MarkWho, RoomState, SceneChoice } from '../types';
 
 export function holds(room: RoomState, myId: string | undefined, who: MarkWho, mark: string) {
   if (who === 'world') return room.world.some((m) => m.id === mark);

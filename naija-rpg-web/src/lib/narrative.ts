@@ -1,4 +1,4 @@
-import type { RoomState } from '@/types';
+import type { RoomState } from '../types';
 
 const join = (names: string[]) =>
   names.length <= 1 ? (names[0] ?? '') : `${names.slice(0, -1).join(', ')} & ${names[names.length - 1]}`;

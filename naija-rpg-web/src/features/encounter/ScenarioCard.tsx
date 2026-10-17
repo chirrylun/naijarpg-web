@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Card } from '@/components/ui/Card';
 import { fillNames } from '@/lib/narrative';
 import { useSession } from '@/stores/session';
-import type { RoomState } from '@/types';
+import type { RoomState } from '../../types';
 
 export function ScenarioCard({ room }: { room: RoomState }) {
   const myId = useSession((s) => s.session?.user.id);

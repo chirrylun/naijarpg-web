@@ -12,7 +12,7 @@ import { emitAck } from '@/lib/socket';
 import { useGame } from '@/stores/game';
 import { useToast } from '@/stores/toast';
 import { cn } from '@/lib/utils';
-import type { PrivateRoll, StarPlay } from '@/types';
+import type { PrivateRoll, StarPlay } from '../../types';
 
 export function EdgePanel() {
   const roll = useGame((s) => s.myRoll);

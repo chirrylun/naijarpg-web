@@ -13,11 +13,10 @@ import { ReferralCard } from '@/features/referrals/ReferralCard';
 import { requestChat } from '@/features/chat/requestChat';
 import { useMe } from '@/hooks/useMe';
 import { api, errorText } from '@/lib/api';
-import { APPROACHES } from '@/lib/constants';
 import { winRate } from '@/lib/utils';
 import { useSession } from '@/stores/session';
 import { useToast } from '@/stores/toast';
-import type { Approach, PublicProfile } from '@/types';
+import type { PublicProfile } from '../../../types';
 
 export default function ProfilePage() {
   const { username } = useParams<{ username: string }>();

@@ -10,7 +10,7 @@ import { emitAck } from '@/lib/socket';
 import { netTag, openMoves } from '@/lib/storyFx';
 import { useToast } from '@/stores/toast';
 import { cn } from '@/lib/utils';
-import type { Approach, RoomState } from '@/types';
+import type { Approach, RoomState } from '../../types';
 
 // Rendered with key={room.id:round}, so its state resets every new round
 export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }) {

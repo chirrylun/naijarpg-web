@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { useMe } from '@/hooks/useMe';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import type { TopPlayer } from '@/types';
+import type { TopPlayer } from '../../types';
 
 type Period = 'week' | 'all';
 

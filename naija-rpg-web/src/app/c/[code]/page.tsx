@@ -11,7 +11,7 @@ import { api, errorText } from '@/lib/api';
 import { MODE_CARDS } from '@/lib/constants';
 import { emitAck } from '@/lib/socket';
 import { useToast } from '@/stores/toast';
-import type { InviteInfo } from '@/types';
+import type { InviteInfo } from '../../../types';
 
 export default function ChallengePage() {
   const { code } = useParams<{ code: string }>();

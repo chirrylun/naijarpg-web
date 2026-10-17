@@ -12,7 +12,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Avatar } from '@/features/avatar/Avatar';
 import { cn } from '@/lib/utils';
-import type { ChatPerson, ChatRequest, Conversation, Message } from '@/types';
+import type { ChatPerson, ChatRequest, Conversation, Message } from '../../types';
 
 export function ChatDock() {
   const session = useSession((s) => s.session);

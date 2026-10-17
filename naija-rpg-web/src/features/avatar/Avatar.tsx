@@ -1,4 +1,4 @@
-import type { Look } from '@/types';
+import type { Look } from '../../types';
 
 const SKIN = '#8a5a3c';
 const DEFAULT: Look = { body: 'body_1', outfit: 'outfit_tee', headwear: 'headwear_cap', shoes: 'shoes_sneakers' };

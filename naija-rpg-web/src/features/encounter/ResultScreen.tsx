@@ -17,7 +17,7 @@ import { siteUrl, whatsappUrl } from '@/lib/utils';
 import { useGame } from '@/stores/game';
 import { useSession } from '@/stores/session';
 import { useToast } from '@/stores/toast';
-import type { FinishedPayload, RoomState } from '@/types';
+import type { FinishedPayload, RoomState } from '../../types';
 
 /** The scenes ended level, so one die each decided it. Shown plainly so nobody wonders why. */
 function Decider({ room, finished, myId }: { room: RoomState; finished: FinishedPayload; myId?: string }) {

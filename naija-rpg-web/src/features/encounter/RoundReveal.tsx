@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Dice } from './Dice';
 import { cn } from '@/lib/utils';
 import { luckTag, rollSum } from '@/lib/storyFx';
-import type { RollRow, RoomState, RoundResult } from '@/types';
+import type { RollRow, RoomState, RoundResult } from '../../types';
 
 const TIE_STEP_MS = 2600; // keep in step with tieRerollMs on the server
 

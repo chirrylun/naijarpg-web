@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { FinishedPayload, PrivateRoll, RoomState, RoundResult } from '@/types';
+import type { FinishedPayload, PrivateRoll, RoomState, RoundResult } from '../types';
 
 type GameState = {
   room: RoomState | null;

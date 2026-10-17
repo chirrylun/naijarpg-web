@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Conversation } from '@/types';
+import type { Conversation } from '../types';
 
 const KEY = 'nrpg_chat_seen';
 const load = (): Record<string, number> => {

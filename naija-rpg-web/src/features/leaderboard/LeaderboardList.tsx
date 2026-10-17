@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Avatar } from '@/features/avatar/Avatar';
 import { cn } from '@/lib/utils';
-import type { TopPlayer } from '@/types';
+import type { TopPlayer } from '../../types';
 
 const MEDAL = ['🥇', '🥈', '🥉'];
 

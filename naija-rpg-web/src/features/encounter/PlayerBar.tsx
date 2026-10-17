@@ -1,6 +1,6 @@
 import { Avatar } from '@/features/avatar/Avatar';
 import { cn } from '@/lib/utils';
-import type { RoomState } from '@/types';
+import type { RoomState } from '../../types';
 
 /** Players with their score right beside the avatar. Nothing else. */
 export function PlayerBar({ room, myId }: { room: RoomState; myId?: string }) {

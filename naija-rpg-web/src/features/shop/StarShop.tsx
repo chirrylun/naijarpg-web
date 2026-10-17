@@ -9,7 +9,7 @@ import { SaveProgress } from '@/features/account/SaveProgress';
 import { ApiError, api, errorText } from '@/lib/api';
 import { STAR_PLAYS } from '@/lib/constants';
 import { useToast } from '@/stores/toast';
-import type { Pack, StarPlay } from '@/types';
+import type { Pack, StarPlay } from '../../types';
 
 export function StarShop() {
   const packs = useQuery({ queryKey: ['packs'], queryFn: () => api<Pack[]>('/api/stars/packs', { auth: false }) });
