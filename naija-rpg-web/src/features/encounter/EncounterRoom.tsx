@@ -7,6 +7,7 @@ import { EdgePanel } from './EdgePanel';
 import { RoundReveal } from './RoundReveal';
 import { RoundTimer } from './RoundTimer';
 import { MarkChips } from './StoryBits';
+import { WinMeter } from './WinMeter';
 import { useGame } from '@/stores/game';
 import { useSession } from '@/stores/session';
 import type { RoomState } from '@/types';
@@ -30,6 +31,7 @@ export function EncounterRoom({ room }: { room: RoomState }) {
           {room.format} · {room.mode === 'coop' ? 'Co-op' : room.mode === 'team' ? 'Teams' : 'Face off'}
         </span>
       </div>
+      <WinMeter room={room} myId={myId} />
       <PlayerBar room={room} myId={myId} />
       <ScenarioCard room={room} />
       {!result && room.phase !== 'reveal' && (

@@ -59,7 +59,8 @@ export type Kind = 'decisive' | 'both_succeed' | 'both_fail' | 'tie' | 'all_pass
 export type Standing = 'won' | 'lost' | 'level' | 'crew';
 export type Status = { mod: number; label: string } | null;
 
-export type RoomPlayer = { userId: string; username: string; avatar: Look; team: number; acted: boolean; marks: MarkInfo[] };
+export type RoomPlayer = { userId: string; username: string; avatar: Look; team: number; acted: boolean; marks: MarkInfo[]; bonusKept: boolean };
+export type BonusInfo = { label: string; stars: number; points: number };
 export type RoomState = {
   id: string;
   code: string | null;
@@ -75,6 +76,9 @@ export type RoomState = {
   remainingMs: number | null;
   recap: string | null;
   world: MarkInfo[]
+  win: { points: number; stars: number };
+  wins: Record<number, number> | null; // scenes won per team (duels only)
+  bonus: BonusInfo | null;
   scenario: { id: string; title: string; tagline: string };
   scene: null | {
     key: string;
@@ -111,6 +115,8 @@ export type RoundResult = {
   headline: string;
   gained: Gained[]
   lead: { userId: string; approach: Approach } | null
+  bonusLost?: string[];
+  bonusLostMessage?: string | null;
   tieRounds?: { userId: string; die: number }[][]; // re-rolls used to break a tie on the top roll
   ends: boolean;
   revealMs: number;
@@ -118,7 +124,18 @@ export type RoundResult = {
 export type FinishedPayload = {
   roomId: string;
   mode: Mode;
-  results: { userId: string; username: string; team: number; result: Outcome; points: number }[];
+  results: {
+    userId: string;
+    username: string;
+    team: number;
+    result: Outcome;
+    points: number;
+    stars: number;
+    capped: boolean;
+    bonus: 'earned' | 'missed' | null;
+  }[];
+  decider?: { team: number; die: number }[][]; // one die per side when the scenes ended level
+  bonus?: { label: string; earnedLine: string; lostMessage: string } | null;
   endings: Partial<Record<Outcome, string>>;
   story: string[] 
   epilogue: string[]

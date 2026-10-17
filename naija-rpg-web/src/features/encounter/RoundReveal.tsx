@@ -122,6 +122,11 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
       >
         <div className="text-5xl">{v.emoji}</div>
         <div className={cn('font-display text-2xl font-extrabold', v.tone)}>{v.text}</div>
+        {myId && result.bonusLost?.includes(myId) && result.bonusLostMessage && (
+          <p className="mx-auto mt-2 max-w-xs rounded-xl border border-danger/30 bg-danger/10 px-3 py-1.5 text-sm font-semibold text-danger">
+            {result.bonusLostMessage}
+          </p>
+        )}
       </motion.div>
 
       <div className="h-1 overflow-hidden rounded-full bg-panel-2">

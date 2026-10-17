@@ -19,6 +19,25 @@ import { useSession } from '@/stores/session';
 import { useToast } from '@/stores/toast';
 import type { FinishedPayload, RoomState } from '@/types';
 
+/** The scenes ended level, so one die each decided it. Shown plainly so nobody wonders why. */
+function Decider({ room, finished, myId }: { room: RoomState; finished: FinishedPayload; myId?: string }) {
+  const myTeam = room.players.find((p) => p.userId === myId)?.team ?? 0;
+  const last = finished.decider![finished.decider!.length - 1];
+  const mine = last.find((t) => t.team === myTeam)?.die;
+  const theirs = last.find((t) => t.team !== myTeam)?.die;
+  return (
+    <Card className="border-sky/30 bg-sky/5 text-center">
+      <div className="text-xs font-bold uppercase tracking-wider text-sky">Scenes were level</div>
+      <p className="mt-1 text-sm text-ink/90">
+        One die each decided it{finished.decider!.length > 1 ? ` (after ${finished.decider!.length - 1} re-roll${finished.decider!.length > 2 ? 's' : ''})` : ''}.
+      </p>
+      <p className="mt-1 font-display text-2xl font-extrabold">
+        You {mine} <span className="text-mute">-</span> {theirs}
+      </p>
+    </Card>
+  );
+}
+
 export function ResultScreen({ room, finished }: { room: RoomState; finished: FinishedPayload }) {
   const router = useRouter();
   const myId = useSession((s) => s.session?.user.id);
@@ -54,9 +73,25 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
       <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center">
         <div className="text-6xl">{copy.emoji}</div>
         <h1 className={`mt-2 font-display text-4xl font-extrabold ${copy.color}`}>{copy.title}</h1>
-        {mine && <p className="mt-1 font-display text-xl font-extrabold text-gold">+{mine.points} points</p>}
+        {mine && (
+          <p className="mt-1 font-display text-xl font-extrabold text-gold">
+            +{mine.points} points{mine.stars > 0 && ` · +${mine.stars}★`}
+          </p>
+        )}
+        {mine?.capped && <p className="mt-1 text-xs text-mute">You have reached today&apos;s limit for game stars.</p>}
         <p className="mt-1 text-sm text-mute">{room.scenario.title}</p>
       </motion.div>
+
+      {finished.decider && finished.decider.length > 0 && <Decider room={room} finished={finished} myId={myId} />}
+
+      {finished.bonus && mine?.bonus && (
+        <Card className={mine.bonus === 'earned' ? 'border-brand/30 bg-brand/5' : 'border-line'}>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-mute">Bonus · {finished.bonus.label}</div>
+          <p className={`mt-1 font-semibold ${mine.bonus === 'earned' ? 'text-brand' : 'text-mute'}`}>
+            {mine.bonus === 'earned' ? `${finished.bonus.earnedLine} +1★ +5 pts` : finished.bonus.lostMessage}
+          </p>
+        </Card>
+      )}
 
       {ending && (
         <Card className="border-gold/30 bg-gold/5">
@@ -73,7 +108,10 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
               <Avatar look={p?.avatar} size={40} crop="bust" />
               <span className="flex-1 truncate font-semibold">{r.userId === myId ? 'You' : r.username}</span>
               <span className="text-xs font-bold uppercase text-mute">{r.result}</span>
-              <span className="font-bold text-gold">+{r.points}</span>
+              <span className="font-bold text-gold">
+                +{r.points}
+                {r.stars > 0 && ` · +${r.stars}★`}
+              </span>
             </div>
           );
         })}

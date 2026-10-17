@@ -1,29 +1,11 @@
-import type { Gained, MarkInfo, RoomState } from '@/types';
+import type { MarkInfo } from '@/types';
 
+/** Shared story state, kept quiet: plain words, at most two */
 export function MarkChips({ marks }: { marks: MarkInfo[] }) {
   if (!marks.length) return null;
   return (
-    <div className="mt-1 flex flex-wrap gap-1">
-      {marks.map((m) => (
-        <span key={m.id} title={m.tip} className="rounded-full bg-panel-2 px-2 py-0.5 text-[10px] font-semibold text-mute">
-          {m.label}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-/** Easier / harder / locked notes under a move */
-export function ChoiceTags({ tags, locked }: { tags: { delta: number; label: string }[]; locked: string | null }) {
-  if (!tags.length && !locked) return null;
-  return (
-    <span className="mt-1 flex flex-wrap gap-1.5 text-[11px] font-bold">
-      {locked && <span className="text-danger">🔒 {locked}</span>}
-      {tags.map((t, i) => (
-        <span key={i} className={t.delta < 0 ? 'text-brand' : 'text-orange-300'}>
-          {t.delta < 0 ? 'Easier' : 'Harder'} · {t.label}
-        </span>
-      ))}
+    <span className="truncate text-[11px] font-semibold text-mute" title={marks.map((m) => m.tip).join(' ')}>
+      {marks.slice(0, 2).map((m) => m.label).join(' · ')}
     </span>
   );
 }
@@ -35,23 +17,6 @@ export function Twists({ lines }: { lines: string[] }) {
     <div className="mt-3 space-y-1 border-l-2 border-line pl-3 text-sm italic text-mute">
       {lines.map((l, i) => (
         <p key={i}>{l}</p>
-      ))}
-    </div>
-  );
-}
-
-/** What each player earned this round, with what it means */
-export function GainedMarks({ gained, room, myId }: { gained: Gained[]; room: RoomState; myId?: string }) {
-  if (!gained.length) return null;
-  const who = (id: string | null) =>
-    id === null ? 'Everyone' : id === myId ? 'You' : (room.players.find((p) => p.userId === id)?.username ?? 'Player');
-  return (
-    <div className="space-y-1 rounded-2xl border border-gold/30 bg-gold/5 p-3 text-left text-sm">
-      <div className="text-xs font-bold uppercase tracking-wide text-gold">What this changes</div>
-      {gained.map((g, i) => (
-        <p key={i}>
-          <span className="font-bold">{who(g.userId)}: {g.label}.</span> <span className="text-mute">{g.tip}</span>
-        </p>
       ))}
     </div>
   );
