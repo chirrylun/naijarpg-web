@@ -5,8 +5,9 @@ import { APPROACHES } from '@/lib/constants';
 
 const MOVES = [
   { approach: 'charm', text: 'Smile and greet them like an old friend' },
-  { approach: 'gragra', text: 'Say you know the area chairman' },
-  { approach: 'wisdom', text: 'Lie to him. You already paid to the area chairman' },
+  { approach: 'gragra', text: 'Give him a resounding slap' },
+  { approach: 'lie', text: 'Lie to him. You already paid to the area chairman' },
+  { approach: 'wisdom', text: 'Say you know the area chairman' },
 ] as const;
 
 export function HeroCard() {

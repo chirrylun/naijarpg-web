@@ -6,8 +6,8 @@ export const REFERRAL_STARS = 10;
 
 export const APPROACHES: Record<Approach, { label: string; emoji: string }> = {
   charm: { label: 'Charm', emoji: '😎' },
-  hustle: { label: 'Hustle', emoji: '💪🏾' },
-  gragra: { label: 'Lie', emoji: '🗣️' },
+  gragra: { label: 'GraGra', emoji: '💪🏾' },
+  lie: { label: 'Lie', emoji: '🗣️' },
   wisdom: { label: 'Wisdom', emoji: '🧠' },
 };
 
