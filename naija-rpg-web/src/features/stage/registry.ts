@@ -1,0 +1,355 @@
+import type { ActorSpec, Beat, StageScene } from './types';
+
+/**
+ * Scene -> stage. One entry per scene key of every scenario in naijarpg-server/src/content/scenarios.
+ * Run `npm run stage:check` after adding or renaming scenes, so nothing is left without art.
+ *
+ * Stage is 600 x 220. x is the middle of an actor, feet stand on y = 182.
+ * Keep the whole opening under ~1.8s: the round timer is already running while it plays.
+ * Facing follows the beat: walkInR (arrives from the right) faces left, driveInL faces right, and so on.
+ */
+
+export const DEFAULT_SCALE = 1.1;
+
+/** How long each beat lasts when an actor doesn't say. */
+export const BEAT_SECONDS: Record<Beat, number> = {
+  driveInL: 1.2,
+  driveInR: 1.2,
+  walkInL: 1.0,
+  walkInR: 1.0,
+  popIn: 0.35,
+  fadeIn: 0.45,
+  riseIn: 0.5,
+  tossL: 0.7,
+  driveOutL: 1.2,
+  driveOutR: 1.2,
+  walkOffL: 1.2,
+  walkOffR: 1.2,
+};
+
+export const beatSeconds = (a: ActorSpec) => (a.beat ? (a.for ?? BEAT_SECONDS[a.beat]) : 0);
+
+/** Seconds until everything in the opening has landed. Loops (crossL / crossR) don't count. */
+export function enterSeconds(s: StageScene): number {
+  return s.cast.reduce((m, a) => (a.beat ? Math.max(m, (a.at ?? 0) + beatSeconds(a)) : m), 0);
+}
+
+const a = (art: ActorSpec['art'], x: number, o: Omit<ActorSpec, 'art' | 'x'> = {}): ActorSpec => ({ art, x, ...o });
+
+/* ------------------------------------------------------------------ */
+/*  Go-Slow Levy: Airport Road, 6:30pm, Uncle Chuks lands at 8         */
+/* ------------------------------------------------------------------ */
+
+const AGBERO_WINDOW: Record<string, StageScene> = {
+  // the Bolt rolls in and stops in the go-slow, then the agbero walks up and knocks
+  knock: {
+    set: 'goSlow',
+    cast: [
+      a('bolt', 210, { beat: 'driveInL', for: 1.2 }),
+      a('agbero', 350, { beat: 'walkInR', at: 0.45, for: 0.9, pose: 'stand', reach: 'front' }),
+      a('alert', 350, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+  kayode_talk: {
+    set: 'goSlow',
+    cast: [
+      a('bolt', 210, { idle: 'rumble' }),
+      a('kayode', 330, { beat: 'popIn', at: 0.1, pose: 'stand', reach: 'front', flip: true, idle: 'sway' }),
+    ],
+  },
+  second_boy: {
+    set: 'goSlow',
+    cast: [
+      a('bolt', 210, { idle: 'rumble' }),
+      a('kayode', 320, { pose: 'stand', flip: true }),
+      a('bigBoy', 400, { beat: 'walkInR', for: 0.9, pose: 'stand', reach: 'front' }),
+      a('boyA', 105, { beat: 'walkInL', at: 0.25, for: 1.0, pose: 'stand' }),
+      a('boyB', 150, { beat: 'walkInL', at: 0.4, for: 1.0, pose: 'stand' }),
+    ],
+  },
+  viral: {
+    set: 'goSlow',
+    cast: [
+      a('bolt', 210, { idle: 'rumble' }),
+      a('kayode', 330, { pose: 'stand', flip: true, idle: 'hop' }),
+      a('hawker', 470, { beat: 'walkInR', for: 1.0, pose: 'stand' }),
+      a('whiteShirt', 410, { beat: 'walkInR', at: 0.2, for: 0.9, pose: 'stand', reach: 'front' }),
+      a('bystanderM', 70, { beat: 'walkInL', at: 0.1, for: 1.0, pose: 'stand' }),
+      a('phone', 70, { beat: 'popIn', at: 1.0 }),
+      a('bystanderF', 540, { beat: 'walkInR', at: 0.3, for: 1.0, pose: 'stand' }),
+      a('phone', 540, { beat: 'popIn', at: 1.15, flip: true }),
+    ],
+  },
+  femi_gist: {
+    set: 'goSlow',
+    cast: [
+      a('bolt', 210, { idle: 'rumble' }),
+      // Kayode gives up and drifts off, and Mr. Femi finally speaks
+      a('kayode', 330, { beat: 'walkOffR', at: 0.1, for: 1.3, pose: 'stand' }),
+    ],
+  },
+  banging: {
+    set: 'goSlow',
+    cast: [
+      a('bolt', 210, { idle: 'rumble' }),
+      a('kayode', 330, { pose: 'stand', flip: true, reach: 'front' }),
+      a('bigBoy', 400, { beat: 'walkInR', at: 0.1, for: 0.8, pose: 'stand', reach: 'front' }),
+      a('boyA', 120, { beat: 'walkInL', at: 0.2, for: 0.9, pose: 'stand', reach: 'front' }),
+      a('boyB', 470, { beat: 'walkInR', at: 0.3, for: 0.9, pose: 'stand' }),
+      a('alert', 330, { beat: 'popIn', at: 0.9 }),
+    ],
+  },
+  // the back road: the Bolt rolls up to a chained gate
+  estate_gate: {
+    set: 'estateGate',
+    cast: [
+      a('bolt', 170, { beat: 'driveInL', for: 1.2 }),
+      a('guard', 360, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
+      a('guardB', 410, { beat: 'popIn', at: 0.95, pose: 'stand', flip: true, reach: 'front' }),
+      a('boyC', 320, { beat: 'popIn', at: 1.1, pose: 'stand', flip: true }),
+    ],
+  },
+  // fast along the service lane, then a LASTMA officer jumps out in front
+  service_lane: {
+    set: 'serviceLane',
+    cast: [
+      a('cones', 500),
+      a('bolt', 200, { beat: 'driveInL', for: 1.0 }),
+      a('lastma', 350, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true, reach: 'front' }),
+      a('alert', 350, { beat: 'popIn', at: 1.0 }),
+    ],
+  },
+  // an SUV cuts the road in front of the Bolt and the Chairman steps out
+  chairman: {
+    set: 'goSlow',
+    cast: [
+      a('bolt', 130, { idle: 'rumble' }),
+      a('suv', 420, { beat: 'driveInR', for: 1.1 }),
+      a('chairman', 310, { beat: 'popIn', at: 1.0, pose: 'stand', flip: true, idle: 'sway' }),
+      a('kayode', 360, { beat: 'popIn', at: 1.15, pose: 'stand', flip: true }),
+      a('bigBoy', 390, { beat: 'popIn', at: 1.25, pose: 'stand', flip: true }),
+    ],
+  },
+  // Mr. Femi drops you at the bus stop and drives off; okada men crowd in
+  okada: {
+    set: 'busStop',
+    cast: [
+      a('bolt', 300, { beat: 'driveOutR', at: 0.1, for: 1.3 }),
+      a('you', 440, { pose: 'stand', flip: true }),
+      a('okada', 130, { beat: 'driveInL', at: 0.3, for: 1.0 }),
+      a('okada', 215, { beat: 'driveInL', at: 0.5, for: 1.0 }),
+    ],
+  },
+  // phone rings at the bus stop and a plane crosses the sky
+  uncle_call: {
+    set: 'busStop',
+    cast: [
+      a('plane', 120, { y: 58, idle: 'crossR', idleFor: 16 }),
+      a('you', 300, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
+      a('phone', 300, { beat: 'popIn', at: 1.0 }),
+      a('alert', 300, { beat: 'popIn', at: 1.15 }),
+    ],
+  },
+  arrivals_clean: {
+    set: 'arrivals',
+    cast: [
+      a('trolley', 395),
+      a('uncle', 340, { beat: 'popIn', at: 0.7, pose: 'stand', flip: true, reach: 'front' }),
+      a('you', 150, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
+      a('bystanderF', 500, { beat: 'fadeIn', at: 0.4, pose: 'stand', flip: true }),
+    ],
+  },
+  arrivals_late: {
+    set: 'arrivals',
+    cast: [
+      a('box', 390),
+      a('uncle', 340, { beat: 'popIn', at: 0.7, pose: 'stand', flip: true }),
+      a('puff', 340, { beat: 'fadeIn', at: 1.0 }),
+      a('you', 150, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
+      a('bystanderM', 480, { beat: 'fadeIn', at: 0.5, pose: 'stand', flip: true }),
+    ],
+  },
+  arrivals_wahala: {
+    set: 'arrivals',
+    cast: [
+      a('trolley', 395),
+      a('uncle', 340, { beat: 'popIn', at: 0.6, pose: 'stand', flip: true, reach: 'front' }),
+      a('stranger', 530, { beat: 'riseIn', at: 0.8, for: 0.6, pose: 'stand', flip: true }),
+      a('you', 150, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
+      a('alert', 150, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/*  Night Don Fall: last danfo, 10:40pm, twenty minutes on foot        */
+/* ------------------------------------------------------------------ */
+
+const NIGHT_RETURN: Record<string, StageScene> = {
+  // the danfo pulls away and you are left at the junction with a keke idling
+  junction: {
+    set: 'junction',
+    cast: [
+      a('danfo', 300, { beat: 'driveOutR', at: 0.1, for: 1.5 }),
+      a('keke', 480, { flip: true, idle: 'rumble' }),
+      a('you', 190, { beat: 'popIn', at: 0.1, pose: 'stand' }),
+      a('rival', 250, { beat: 'popIn', at: 0.25, pose: 'stand', duo: true }),
+    ],
+  },
+  keke: {
+    set: 'junction',
+    cast: [
+      a('keke', 400, { flip: true, idle: 'rumble' }),
+      a('kekeRider', 345, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true, idle: 'heave' }),
+      a('you', 160, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
+      a('rival', 100, { beat: 'walkInL', at: 0.15, for: 1.0, pose: 'stand', duo: true }),
+    ],
+  },
+  stuck_junction: {
+    set: 'junction',
+    cast: [
+      a('keke', 400, { beat: 'driveOutR', for: 1.1 }),
+      a('you', 160, { pose: 'stand' }),
+      a('thug', 400, { beat: 'walkInR', at: 0.5, for: 1.0, pose: 'stand', reach: 'front' }),
+      a('thugB', 470, { beat: 'walkInR', at: 0.7, for: 1.0, pose: 'stand' }),
+    ],
+  },
+  loud_call: {
+    set: 'junction',
+    cast: [
+      a('you', 240, { pose: 'stand' }),
+      a('phone', 240, { beat: 'popIn', at: 0.1 }),
+      a('torch', 480, { beat: 'fadeIn', at: 0.3 }),
+      a('thug', 490, { beat: 'popIn', at: 0.45, pose: 'stand', flip: true }),
+      a('thugB', 130, { beat: 'walkInL', at: 0.5, for: 0.9, pose: 'stand' }),
+      a('alert', 240, { beat: 'popIn', at: 1.0 }),
+    ],
+  },
+  main_road: {
+    set: 'mainRoad',
+    cast: [
+      a('okada', 300, { y: 178, idle: 'crossL', idleFor: 9, at: 1.0 }),
+      a('you', 210, { beat: 'walkInL', for: 1.4, pose: 'stand' }),
+      a('rival', 150, { beat: 'walkInL', at: 0.15, for: 1.4, pose: 'stand', duo: true }),
+    ],
+  },
+  rope: {
+    set: 'mainRoad',
+    cast: [
+      a('rope', 340, { beat: 'fadeIn', at: 0.1, idle: 'sway' }),
+      a('lantern', 505, { beat: 'fadeIn', at: 0.2 }),
+      a('boyA', 435, { beat: 'popIn', at: 0.35, pose: 'stand', flip: true }),
+      a('boyB', 470, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('boyC', 535, { beat: 'popIn', at: 0.65, pose: 'stand', flip: true }),
+      a('bigBoy', 565, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
+      a('you', 170, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
+      a('rival', 115, { beat: 'walkInL', at: 0.15, for: 1.2, pose: 'stand', duo: true }),
+    ],
+  },
+  inner_street: {
+    set: 'innerStreet',
+    cast: [
+      a('lantern', 285, { beat: 'fadeIn' }),
+      a('akaraWoman', 260, { beat: 'popIn', at: 0.1, pose: 'stand', flip: true, idle: 'sway' }),
+      a('boyA', 382, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('boyB', 408, { beat: 'popIn', at: 0.65, pose: 'stand', flip: true }),
+      a('boyC', 434, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
+      a('you', 120, { beat: 'walkInL', for: 1.1, pose: 'stand' }),
+    ],
+  },
+  pocket_check: {
+    set: 'generatorRow',
+    cast: [
+      a('generator', 520, { idle: 'rumble' }),
+      a('you', 300, { beat: 'walkInL', for: 0.9, pose: 'stand' }),
+      a('thug', 355, { beat: 'popIn', at: 0.6, pose: 'stand', flip: true, reach: 'front' }),
+      a('thugB', 245, { beat: 'popIn', at: 0.75, pose: 'stand' }),
+      a('alert', 300, { beat: 'popIn', at: 1.0 }),
+    ],
+  },
+  vigilante: {
+    set: 'innerStreet',
+    cast: [
+      a('you', 190, { beat: 'walkInL', for: 0.9, pose: 'stand' }),
+      a('vigilante', 335, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('torch', 335, { beat: 'fadeIn', at: 0.55, for: 0.25 }),
+      a('vigilante', 375, { beat: 'popIn', at: 0.65, pose: 'stand', flip: true }),
+      a('vigilante', 415, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true, reach: 'front' }),
+      a('stick', 392, { beat: 'popIn', at: 0.8, flip: true }),
+      a('alert', 190, { beat: 'popIn', at: 1.1 }),
+    ],
+  },
+  // a fight spills out of the bar, a man is thrown across the road, everybody runs
+  uproar: {
+    set: 'barStreet',
+    cast: [
+      a('thug', 180, { pose: 'guard' }),
+      a('thugB', 235, { pose: 'guard', flip: true }),
+      a('boyA', 330, { beat: 'tossL', at: 0.2, for: 0.7, pose: 'stand' }),
+      a('bystanderM', 300, { idle: 'crossR', idleFor: 4.5, at: 0.8 }),
+      a('bystanderF', 300, { idle: 'crossL', idleFor: 5.2, at: 1.0 }),
+      a('boyB', 300, { y: 188, idle: 'crossL', idleFor: 4.2, at: 1.4 }),
+      a('you', 490, { beat: 'popIn', at: 0.1, pose: 'stand', flip: true }),
+      a('alert', 490, { beat: 'popIn', at: 1.0 }),
+    ],
+  },
+  generator_row: {
+    set: 'generatorRow',
+    cast: [
+      a('generator', 55, { idle: 'rumble' }),
+      a('generator', 565, { idle: 'rumble' }),
+      a('bystanderM', 150, { beat: 'popIn', at: 0.6, pose: 'stand' }),
+      a('phone', 150, { beat: 'popIn', at: 0.75 }),
+      a('bystanderF', 450, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
+      a('phone', 450, { beat: 'popIn', at: 0.95, flip: true }),
+      a('boyA', 510, { beat: 'popIn', at: 1.0, pose: 'stand', flip: true }),
+      a('you', 300, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
+      a('alert', 300, { beat: 'popIn', at: 1.25 }),
+    ],
+  },
+  gate_clean: {
+    set: 'gate',
+    cast: [
+      a('generator', 520, { idle: 'rumble' }),
+      a('you', 250, { beat: 'walkInL', for: 1.3, pose: 'stand', idle: 'heave' }),
+    ],
+  },
+  gate_shaken: {
+    set: 'gate',
+    cast: [
+      a('generator', 520, { idle: 'rumble' }),
+      a('gateman', 400, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('zzz', 400, { beat: 'fadeIn', at: 0.8 }),
+      a('you', 240, { beat: 'walkInL', for: 1.1, pose: 'stand', idle: 'heave' }),
+    ],
+  },
+  gate_followed: {
+    set: 'gate',
+    cast: [
+      a('generator', 520, { idle: 'rumble' }),
+      a('gateman', 410, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true }),
+      a('stranger', 105, { y: 178, scale: 1, beat: 'walkInL', at: 0.5, for: 1.1, pose: 'stand' }),
+      a('you', 300, { beat: 'walkInL', for: 1.1, pose: 'stand' }),
+      a('alert', 300, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+};
+
+export const STAGES: Record<string, Record<string, StageScene>> = {
+  'agbero-window': AGBERO_WINDOW,
+  'night-return': NIGHT_RETURN,
+};
+
+/** Shown for any scene that has no entry yet, so a new scenario never breaks the page. */
+const FALLBACK: StageScene = {
+  set: 'junction',
+  cast: [a('you', 220, { beat: 'walkInL', for: 1.0, pose: 'stand' })],
+};
+
+export function resolveStage(scenarioId: string, sceneKey: string | undefined): { stage: StageScene; known: boolean } {
+  const s = sceneKey ? STAGES[scenarioId]?.[sceneKey] : undefined;
+  if (!s && sceneKey && process.env.NODE_ENV !== 'production') {
+    console.warn(`[stage] no stage for ${scenarioId}/${sceneKey}, using fallback`);
+  }
+  return { stage: s ?? FALLBACK, known: !!s };
+}
