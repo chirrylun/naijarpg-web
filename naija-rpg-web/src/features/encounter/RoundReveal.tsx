@@ -9,8 +9,8 @@ import type { RollRow, RoomState, RoundResult } from '@/types';
 
 const TIE_STEP_MS = 2600; // keep in step with tieRerollMs on the server
 
-function verdict(result: RoundResult, mine: RollRow | undefined) {
-  if (result.kind === 'all_pass') return { emoji: '🎉', text: 'You did it together!', tone: 'text-brand' };
+function verdict(result: RoundResult, mine: RollRow | undefined, solo: boolean) {
+  if (result.kind === 'all_pass') return { emoji: '🎉', text: solo ? 'You did it!' : 'You did it together!', tone: 'text-brand' };
   if (result.kind === 'mixed') return { emoji: '😅', text: 'Some of you did it!', tone: 'text-gold' };
   if (result.kind === 'all_fail') return { emoji: '😬', text: "It didn't work this time", tone: 'text-danger' };
   if (mine?.standing === 'won') return { emoji: '🎉', text: 'You win this round!', tone: 'text-gold' };
@@ -55,7 +55,7 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
   const lastTie = ties[ties.length - 1];
   const tiesDone = ties.length === 0 || (tiesShown >= ties.length && lastTieLanded >= (lastTie?.length ?? 0));
   const ready = forced || (allLanded && tiesDone);
-  const v = verdict(result, mine);
+  const v = verdict(result, mine, room.solo);
 
   return (
     <div className="space-y-5">

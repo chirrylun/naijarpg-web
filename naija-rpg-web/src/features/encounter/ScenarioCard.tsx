@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Card } from '@/components/ui/Card';
 import { fillNames } from '@/lib/narrative';
 import { useSession } from '@/stores/session';
-import { Twists } from './StoryBits';
 import type { RoomState } from '@/types';
 
 export function ScenarioCard({ room }: { room: RoomState }) {
@@ -24,7 +23,6 @@ export function ScenarioCard({ room }: { room: RoomState }) {
               <p className="text-sm leading-snug text-ink/90">{fillNames(scene.stakes, room, myId)}</p>
             </div>
           )}
-          <Twists lines={(scene.twists ?? []).slice(0, 1).map((l) => fillNames(l, room, myId))} />
         </Card>
       </motion.div>
     </AnimatePresence>

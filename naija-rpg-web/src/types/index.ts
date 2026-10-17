@@ -76,6 +76,7 @@ export type RoomState = {
   remainingMs: number | null;
   recap: string | null;
   world: MarkInfo[]
+  solo: boolean;
   win: { points: number; stars: number };
   wins: Record<number, number> | null; // scenes won per team (duels only)
   bonus: BonusInfo | null;

@@ -28,7 +28,7 @@ export function EncounterRoom({ room }: { room: RoomState }) {
         </span>
         <MarkChips marks={room.world} />
         <span className="rounded-full bg-panel-2 px-3 py-1 uppercase tracking-wide text-brand">
-          {room.format} · {room.mode === 'coop' ? 'Co-op' : room.mode === 'team' ? 'Teams' : 'Face off'}
+          {room.solo ? 'Solo' : `${room.format} · ${room.mode === 'coop' ? 'Co-op' : room.mode === 'team' ? 'Teams' : 'Face off'}`}
         </span>
       </div>
       <WinMeter room={room} myId={myId} />

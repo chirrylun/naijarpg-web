@@ -6,7 +6,7 @@ export const REFERRAL_STARS = 10;
 
 export const APPROACHES: Record<Approach, { label: string; emoji: string }> = {
   charm: { label: 'Charm', emoji: '😎' },
-  gragra: { label: 'GraGra', emoji: '💪🏾' },
+  gragra: { label: 'Hustle', emoji: '💪🏾' },
   lie: { label: 'Lie', emoji: '🗣️' },
   wisdom: { label: 'Wisdom', emoji: '🧠' },
 };
@@ -30,8 +30,9 @@ export const STAR_PLAYS: Record<StarPlay, { label: string; cost: number; blurb: 
   shield: { label: 'Shield', cost: 2, blurb: 'Not available right now' },
 };
 
-export const MODE_CARDS: { id: string; mode: Mode; format: Format; name: string; tag: string; blurb: string }[] = [
+export const MODE_CARDS: { id: string; mode: Mode; format: Format; name: string; tag: string; blurb: string; solo?: boolean }[] = [
   { id: 'rival-1v1', mode: 'rival', format: '1v1', name: 'Face Off', tag: '1v1', blurb: 'You against one player. The higher roll wins the scene.' },
+  { id: 'solo', mode: 'coop', format: '1v1', name: 'Solo', tag: '1 player', blurb: 'Play the story on your own. No waiting for anybody.', solo: true },
   { id: 'coop-1v1', mode: 'coop', format: '1v1', name: 'Link Up', tag: '1v1 co-op', blurb: 'You and a friend team up to face the challenge.' },
   /*
   { id: 'team-2v2', mode: 'team', format: '2v2', name: 'Team Battle', tag: '2v2', blurb: 'Two teams of two. The team with the better rolls wins the scene.' },

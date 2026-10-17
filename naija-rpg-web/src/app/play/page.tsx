@@ -73,6 +73,17 @@ export default function PlayPage() {
       setBusy(false);
     }
   }
+  async function startSolo() {
+    setBusy(true);
+    try {
+      const r = await emitAck<{ roomId: string }>('solo:start', {});
+      router.push(`/play/${r.roomId}`);
+    } catch (e) {
+      toast(errorText(e), 'bad');
+    } finally {
+      setBusy(false);
+    }
+  }
   function playDaily() {
     const d = daily.data;
     if (!d) return;
@@ -125,7 +136,7 @@ export default function PlayPage() {
 
       <section>
         <h2 className="mb-3 font-display text-2xl font-extrabold">Pick a mode</h2>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {MODE_CARDS.map((m) => (
             <button
               key={m.id}
@@ -145,14 +156,22 @@ export default function PlayPage() {
             </button>
           ))}
         </div>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <Button size="lg" variant="gold" loading={busy} onClick={challenge}>
-            Challenge a friend
-          </Button>
-          <Button size="lg" onClick={() => quick(card.mode, card.format)}>
-            Quick match
-          </Button>
-        </div>
+        {card.solo ? (
+          <div className="mt-4">
+            <Button size="lg" variant="gold" className="w-full" loading={busy} onClick={startSolo}>
+              Start solo game
+            </Button>
+          </div>
+        ) : (
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <Button size="lg" variant="gold" loading={busy} onClick={challenge}>
+              Challenge a friend
+            </Button>
+            <Button size="lg" onClick={() => quick(card.mode, card.format)}>
+              Quick match
+            </Button>
+          </div>
+        )}
       </section>
 
       <ReferralCard />
