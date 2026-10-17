@@ -16,7 +16,7 @@ import { MODE_CARDS } from '@/lib/constants';
 import { emitAck, ensureReady, getSocket } from '@/lib/socket';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/stores/toast';
-import type { Daily, Format, Mode } from '@/types';
+import type { Daily, Format, Mode } from '../../types';
 
 type Queued = { matched: boolean; roomId?: string };
 
