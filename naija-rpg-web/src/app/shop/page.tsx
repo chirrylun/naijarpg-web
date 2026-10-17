@@ -20,16 +20,17 @@ export default function ShopPage() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('tab') === 'cosmetics') setTab('cosmetics');
 
-    // coming back from Paystack: confirm the payment (the webhook may be a few seconds late)
-    const reference = params.get('reference') ?? params.get('ref');
-    if (!reference || verified.current) return;
+    // Coming back from Bachs: it adds ?checkout_id=... to the success URL.
+    // The webhook is what credits the stars, so we poll until it has landed.
+    const checkoutId = params.get('checkout_id');
+    if (!checkoutId || verified.current) return;
     verified.current = true;
     const toast = useToast.getState().push;
     let tries = 0;
     const check = async () => {
       try {
         await useSession.getState().ensureSession();
-        const r = await api<{ paid: boolean }>(`/api/stars/verify/${encodeURIComponent(reference)}`);
+        const r = await api<{ paid: boolean }>(`/api/stars/verify/${encodeURIComponent(checkoutId)}`);
         if (r.paid) {
           toast('Stars added! ★', 'good');
           qc.invalidateQueries({ queryKey: ['me'] });
@@ -39,7 +40,8 @@ export default function ShopPage() {
       } catch {
         /* retry below */
       }
-      if (++tries < 4) setTimeout(check, 2500);
+      // about 20 seconds in total, which covers a slow webhook
+      if (++tries < 8) setTimeout(check, 2500);
       else toast('Payment not confirmed yet. If you were charged, your stars will arrive shortly.', 'info');
     };
     void check();
