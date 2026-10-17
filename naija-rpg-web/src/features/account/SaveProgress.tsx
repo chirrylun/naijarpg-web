@@ -7,9 +7,17 @@ import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/stores/toast';
 
-export function SaveProgress({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function SaveProgress({
+  open,
+  onClose,
+  initialMode = 'create',
+}: {
+  open: boolean;
+  onClose: () => void;
+  initialMode?: 'create' | 'signin';
+}) {
   const qc = useQueryClient();
-  const [mode, setMode] = useState<'create' | 'signin'>('create');
+  const [mode, setMode] = useState<'create' | 'signin'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
@@ -19,13 +27,18 @@ export function SaveProgress({ open, onClose }: { open: boolean; onClose: () => 
     e.preventDefault();
     if (password.length < 8) return toast('Use a password of at least 8 characters', 'bad');
     setBusy(true);
+    // The confirmation link must come back to /auth/callback, which finishes the job and
+    // reports problems. Without this, Supabase sends people to the bare Site URL and any
+    // error (expired / already-used link) is silently ignored.
+    // This URL also has to be in Supabase → Authentication → URL Configuration → Redirect URLs.
+    const emailRedirectTo = `${window.location.origin}/auth/callback`;
     const { error } =
       mode === 'create'
-        ? await supabase.auth.updateUser({ email, password })
+        ? await supabase.auth.updateUser({ email, password }, { emailRedirectTo })
         : await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
     if (error) return toast(error.message, 'bad');
-    if (mode === 'create') toast('Check your email to confirm your account ✉️', 'good');
+    if (mode === 'create') toast('Check your email and tap the link to finish saving your account ✉️', 'good');
     else toast('Welcome back!', 'good');
     qc.invalidateQueries();
     onClose();
