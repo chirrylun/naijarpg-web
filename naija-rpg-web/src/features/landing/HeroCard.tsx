@@ -15,8 +15,9 @@ export function HeroCard() {
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-        className="rounded-3xl border border-line bg-panel p-4 shadow-2xl"
+        className="relative overflow-hidden rounded-3xl border border-line bg-panel/95 p-4 pt-6 shadow-2xl backdrop-blur"
       >
+        <div className="ankara-strip absolute inset-x-0 top-0" aria-hidden />
         <p className="text-xs font-bold uppercase tracking-wider text-mute">Market street</p>
         <h3 className="mt-1 font-display text-xl font-extrabold">The agbero wants his money</h3>
         <p className="mt-2 text-sm text-ink/80">

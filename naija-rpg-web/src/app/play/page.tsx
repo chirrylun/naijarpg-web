@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/features/avatar/Avatar';
+import { ModeArt } from '@/features/scene/People';
 import { ReferralCard } from '@/features/referrals/ReferralCard';
 import { useMe } from '@/hooks/useMe';
 import { useRequireSession } from '@/hooks/useRequireSession';
@@ -127,11 +128,18 @@ export default function PlayPage() {
             <button
               key={m.id}
               onClick={() => setPicked(m.id)}
-              className={cn('rounded-3xl border p-4 text-left transition', picked === m.id ? 'border-brand bg-brand/10' : 'border-line bg-panel hover:border-brand/40')}
+              aria-pressed={picked === m.id}
+              className={cn(
+                'flex min-w-0 flex-col overflow-hidden rounded-3xl border text-left transition active:scale-[0.98]',
+                picked === m.id ? 'border-brand bg-brand/10 shadow-[0_0_0_1px_var(--color-brand)]' : 'border-line bg-panel hover:border-brand/40',
+              )}
             >
-              <div className="text-xs font-bold uppercase tracking-wide text-brand">{m.tag}</div>
-              <div className="font-display text-lg font-extrabold">{m.name}</div>
-              <p className="mt-1 text-xs text-mute">{m.blurb}</p>
+              <ModeArt mode={m.mode} />
+              <div className="p-3.5 sm:p-4">
+                <div className="text-xs font-bold uppercase tracking-wide text-brand">{m.tag}</div>
+                <div className="font-display text-lg font-extrabold">{m.name}</div>
+                <p className="mt-1 text-xs text-mute">{m.blurb}</p>
+              </div>
             </button>
           ))}
         </div>
