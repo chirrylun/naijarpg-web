@@ -43,8 +43,9 @@ export function EncounterRoom({ room }: { room: RoomState }) {
       </div>
       <WinMeter room={room} myId={myId} />
       <PlayerBar room={room} myId={myId} />
-      {room.scene && <Stage seq={seq} solo={room.solo} />}
+     
       <ScenarioCard room={room} ready={seq.ready} />
+       {room.scene && <Stage seq={seq} solo={room.solo} />}
       {!result && room.phase !== 'reveal' && (
         <div className="sticky top-14 z-30 -mx-2 rounded-2xl border border-line bg-night/95 px-3 py-2 backdrop-blur">
           <RoundTimer deadline={deadline} totalMs={timerMs} locked={!!me?.acted} phase={timerPhase} />
