@@ -246,7 +246,7 @@ export function FriendsArt({ className }: { className?: string }) {
             <Person pose="stand" reach="front" skin="#8a5a3c" top="#1fc77e" bottom="#26324f" shoes="#f5f5f5" head="cap" headColor="#1c2733" />
           </g>
           <g transform="translate(119.8 118) scale(1.1)">
-            <Person pose="stand" reach="back" dress skin="#7a4a30" top="#e0892f" bottom="#d6336c" shoes="#f0e6d2" head="gele" headColor="#d6336c" />
+            <Person pose="stand" reach="back" skin="#7a4a30" top="#e0892f" bottom="#2b2f3a" shoes="#e9e9e9" head="hair" />
           </g>
         </g>
         <g transform="translate(100 16) scale(0.6)">
