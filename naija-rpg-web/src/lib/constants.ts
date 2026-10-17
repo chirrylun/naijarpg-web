@@ -18,6 +18,12 @@ export const TIERS: Record<Tier, { label: string; emoji: string; text: string; c
   legendary: { label: 'Perfect', emoji: '🌟', text: 'text-gold', chip: 'bg-gold/15 border-gold/40 text-gold' },
 };
 
+// Only very high or very low dice get a tag. Everything in between is just a number.
+export const LUCK = {
+  high: { label: 'Lucky roll', emoji: '🍀', chip: 'bg-gold/15 border-gold/40 text-gold' },
+  low: { label: 'Bad luck', emoji: '😬', chip: 'bg-danger/15 border-danger/40 text-danger' },
+} as const;
+
 export const STAR_PLAYS: Record<StarPlay, { label: string; cost: number; blurb: string }> = {
   reroll: { label: 'Reroll', cost: 1, blurb: 'Roll again and keep the higher number' },
   nudge: { label: 'Nudge', cost: 2, blurb: 'Add 2 to your roll' },

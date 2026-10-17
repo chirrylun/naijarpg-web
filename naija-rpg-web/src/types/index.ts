@@ -111,6 +111,7 @@ export type RoundResult = {
   headline: string;
   gained: Gained[]
   lead: { userId: string; approach: Approach } | null
+  tieRounds?: { userId: string; die: number }[][]; // re-rolls used to break a tie on the top roll
   ends: boolean;
   revealMs: number;
 };

@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Dice } from './Dice';
-import { TIERS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { luckTag, rollSum } from '@/lib/storyFx';
 import type { RollRow, RoomState, RoundResult } from '@/types';
+
+const TIE_STEP_MS = 2600; // keep in step with tieRerollMs on the server
 
 function verdict(result: RoundResult, mine: RollRow | undefined) {
   if (result.kind === 'all_pass') return { emoji: '🎉', text: 'You did it together!', tone: 'text-brand' };
@@ -20,9 +22,13 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
   // your own die always comes first
   const rolls = [...result.rolls].sort((a, b) => (a.userId === myId ? -1 : b.userId === myId ? 1 : 0));
   const mine = rolls.find((r) => r.userId === myId);
+  const ties = result.tieRounds ?? [];
+  const nameOf = (id: string) => (id === myId ? 'You' : (room.players.find((p) => p.userId === id)?.username ?? 'Player'));
 
   const [landed, setLanded] = useState<ReadonlySet<string>>(new Set());
   const [timedOut, setTimedOut] = useState(false);
+  const [tiesShown, setTiesShown] = useState(0); // how many re-rolls are on screen
+  const [lastTieLanded, setLastTieLanded] = useState(0);
   const allLanded = timedOut || landed.size >= rolls.length;
   const land = (id: string) => setLanded((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
 
@@ -32,15 +38,33 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
     return () => clearTimeout(t);
   }, [rolls.length]);
 
+  // a tie on the top roll: bring in each re-roll one after the other
+  useEffect(() => {
+    if (!allLanded || tiesShown >= ties.length) return;
+    const t = setTimeout(() => setTiesShown((n) => n + 1), tiesShown === 0 ? 900 : TIE_STEP_MS);
+    return () => clearTimeout(t);
+  }, [allLanded, tiesShown, ties.length]);
+
+  // final safety net for the verdict, in case a tie die never reports back
+  const [forced, setForced] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setForced(true), Math.max(2000, result.revealMs - 1500));
+    return () => clearTimeout(t);
+  }, [result.revealMs]);
+
+  const lastTie = ties[ties.length - 1];
+  const tiesDone = ties.length === 0 || (tiesShown >= ties.length && lastTieLanded >= (lastTie?.length ?? 0));
+  const ready = forced || (allLanded && tiesDone);
   const v = verdict(result, mine);
 
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 gap-3">
         {rolls.map((r, i) => {
-          const t = TIERS[r.tier];
-          const name = r.userId === myId ? 'You' : (room.players.find((p) => p.userId === r.userId)?.username ?? 'Player');
+          const name = nameOf(r.userId);
           const show = timedOut || landed.has(r.userId);
+          const luck = luckTag(r.die, rolls.filter((o) => o.userId !== r.userId).map((o) => o.die));
+          const sum = rollSum(r.die, r.modifier, r.starBonus);
           return (
             <div key={r.userId} className="flex flex-col items-center gap-2 rounded-3xl border border-line bg-panel p-3 text-center">
               <div className="max-w-full truncate text-sm font-bold">{name}</div>
@@ -51,21 +75,49 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
                 className="flex min-h-[84px] flex-col items-center"
               >
                 <div className="font-display text-5xl font-extrabold leading-none">{r.total}</div>
-                {r.starBonus > 0 && <div className="mt-1 text-xs font-bold text-gold">dice {r.die} + {r.starBonus} bonus</div>}
-                <div className={cn('mt-2 rounded-full border px-3 py-0.5 text-xs font-extrabold', t.chip)}>
-                  {t.emoji} {t.label}
-                </div>
+                {sum && <div className="mt-1 text-xs font-semibold text-mute">{sum}</div>}
+                {luck && (
+                  <div className={cn('mt-2 rounded-full border px-3 py-0.5 text-xs font-extrabold', luck.chip)}>
+                    {luck.emoji} {luck.label}
+                  </div>
+                )}
               </motion.div>
             </div>
           );
         })}
       </div>
 
+      {ties.slice(0, tiesShown).map((round, k) => (
+        <motion.div
+          key={k}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-2 rounded-3xl border border-sky/30 bg-sky/5 p-3 text-center"
+        >
+          <div className="text-sm font-extrabold text-sky">{k === 0 ? 'Same number! Rolling again…' : 'Still level. Again…'}</div>
+          <div className="flex justify-center gap-6">
+            {round.map((t) => (
+              <div key={t.userId} className="flex flex-col items-center">
+                <div className="max-w-24 truncate text-xs font-bold">{nameOf(t.userId)}</div>
+                <Dice
+                  value={t.die}
+                  size={64}
+                  onSettled={() => {
+                    if (k === ties.length - 1) setLastTieLanded((n) => n + 1);
+                  }}
+                />
+                <div className="font-display text-2xl font-extrabold">{t.die}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      ))}
+
       <motion.div
         role="status"
         aria-live="polite"
         initial={{ opacity: 0, y: 8 }}
-        animate={allLanded ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+        animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
         className="min-h-[88px] text-center"
       >
         <div className="text-5xl">{v.emoji}</div>

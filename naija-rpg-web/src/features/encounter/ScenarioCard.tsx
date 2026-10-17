@@ -18,8 +18,13 @@ export function ScenarioCard({ room }: { room: RoomState }) {
           <p className="text-xs font-bold uppercase tracking-wider text-mute">{room.scenario.title}</p>
           <h2 className="mt-1 font-display text-2xl font-extrabold">{fillNames(scene.title, room, myId)}</h2>
           <p className="mt-2 leading-relaxed text-ink/90">{fillNames(scene.text, room, myId)}</p>
-          {scene.stakes && <p className="mt-3 text-sm font-bold text-gold">At stake: {fillNames(scene.stakes, room, myId)}</p>}
-          <Twists lines={(scene.twists ?? []).map((l) => fillNames(l, room, myId))} />
+          {scene.stakes && (
+            <div className="mt-3 flex items-start gap-2 rounded-xl bg-brand/10 px-3 py-2 text-sm">
+              <span aria-hidden className="mt-0.5 text-brand">✦</span>
+              <p className="text-ink/90">{fillNames(scene.stakes, room, myId)}</p>
+            </div>
+          )}
+          <Twists lines={(scene.twists ?? []).slice(0, 1).map((l) => fillNames(l, room, myId))} />
         </Card>
       </motion.div>
     </AnimatePresence>

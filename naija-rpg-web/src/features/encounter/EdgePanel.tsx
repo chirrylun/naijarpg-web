@@ -5,7 +5,8 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Dice } from './Dice';
-import { APPROACHES, STAR_PLAYS, TIERS } from '@/lib/constants';
+import { APPROACHES, STAR_PLAYS } from '@/lib/constants';
+import { luckTag, rollSum } from '@/lib/storyFx';
 import { errorText } from '@/lib/api';
 import { emitAck } from '@/lib/socket';
 import { useGame } from '@/stores/game';
@@ -57,7 +58,8 @@ export function EdgePanel() {
   // the question only appears once every die has stopped
   const settled = roll.dice.every((d, k) => landed.has(keyOf(d, k)));
 
-  const tier = TIERS[roll.tier];
+  const luck = luckTag(roll.die);
+  const sum = rollSum(roll.die, roll.modifier, roll.starBonus);
   const dual = roll.dice.length > 1;
   const kept = roll.dice.indexOf(Math.max(...roll.dice));
   const size = dual ? 80 : 104;
@@ -98,14 +100,16 @@ export function EdgePanel() {
 
         {settled ? (
           <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-            {roll.starBonus > 0 && (
+            {sum && (
               <div className="font-display text-3xl font-extrabold">
-                {roll.total} <span className="text-sm font-bold text-gold">(dice {roll.die} + {roll.starBonus} bonus)</span>
+                {roll.total} <span className="text-sm font-bold text-mute">({sum})</span>
               </div>
             )}
-            <div className={cn('inline-block rounded-full border px-4 py-1 text-sm font-extrabold', tier.chip)}>
-              {tier.emoji} {tier.label}
-            </div>
+            {luck && (
+              <div className={cn('inline-block rounded-full border px-4 py-1 text-sm font-extrabold', luck.chip)}>
+                {luck.emoji} {luck.label}
+              </div>
+            )}
           </motion.div>
         ) : (
           <div className="h-12 animate-pulse pt-3 text-sm font-semibold text-mute">Rolling…</div>

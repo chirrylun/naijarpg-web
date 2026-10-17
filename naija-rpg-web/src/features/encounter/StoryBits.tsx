@@ -5,7 +5,7 @@ export function MarkChips({ marks }: { marks: MarkInfo[] }) {
   return (
     <div className="mt-1 flex flex-wrap gap-1">
       {marks.map((m) => (
-        <span key={m.id} title={m.tip} className="rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-bold text-gold">
+        <span key={m.id} title={m.tip} className="rounded-full bg-panel-2 px-2 py-0.5 text-[10px] font-semibold text-mute">
           {m.label}
         </span>
       ))}
@@ -32,7 +32,7 @@ export function ChoiceTags({ tags, locked }: { tags: { delta: number; label: str
 export function Twists({ lines }: { lines: string[] }) {
   if (!lines.length) return null;
   return (
-    <div className="mt-3 space-y-1 rounded-xl border border-gold/30 bg-gold/5 p-3 text-sm text-gold">
+    <div className="mt-3 space-y-1 border-l-2 border-line pl-3 text-sm italic text-mute">
       {lines.map((l, i) => (
         <p key={i}>{l}</p>
       ))}

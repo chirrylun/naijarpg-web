@@ -7,7 +7,7 @@ import { APPROACHES } from '@/lib/constants';
 import { errorText } from '@/lib/api';
 import { fillNames } from '@/lib/narrative';
 import { emitAck } from '@/lib/socket';
-import { openMoves } from '@/lib/storyFx';
+import { netTag, openMoves } from '@/lib/storyFx';
 import { useToast } from '@/stores/toast';
 import { cn } from '@/lib/utils';
 import type { Approach, RoomState } from '@/types';
@@ -63,21 +63,23 @@ export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }
                 {blocked ? (
                   <span className="mt-1 block text-xs font-bold text-danger">🔒 {locked}</span>
                 ) : (
-                  tags.length > 0 && (
-                    <span className="mt-1 flex flex-wrap gap-1">
-                      {tags.map((t, i) => (
-                        <span
-                          key={i}
-                          className={cn(
-                            'rounded-full px-2 py-0.5 text-[11px] font-bold',
-                            t.delta < 0 ? 'bg-brand/15 text-brand' : 'bg-orange-400/15 text-orange-300',
-                          )}
-                        >
-                          {t.delta < 0 ? '👍 Easier' : '⚠️ Harder'} · {t.label}
+                  (() => {
+                    const fx = netTag(tags);
+                    return (
+                      fx && (
+                        <span className="mt-1 block">
+                          <span
+                            className={cn(
+                              'rounded-full px-2 py-0.5 text-[11px] font-bold',
+                              fx.easier ? 'bg-brand/15 text-brand' : 'bg-orange-400/15 text-orange-300',
+                            )}
+                          >
+                            {fx.easier ? 'Easier' : 'Harder'} · {fx.label}
+                          </span>
                         </span>
-                      ))}
-                    </span>
-                  )
+                      )
+                    );
+                  })()
                 )}
               </span>
             </button>
