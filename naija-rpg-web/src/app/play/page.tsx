@@ -110,6 +110,7 @@ export default function PlayPage() {
         </Card>
       )}
 
+{/*
       {daily.data && (
         <Card className="border-gold/40 bg-gold/5">
           <p className="text-xs font-bold uppercase tracking-wider text-gold">Today&apos;s Special Event</p>
@@ -120,6 +121,7 @@ export default function PlayPage() {
           </Button>
         </Card>
       )}
+        */}
 
       <section>
         <h2 className="mb-3 font-display text-2xl font-extrabold">Pick a mode</h2>
