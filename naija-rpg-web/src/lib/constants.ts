@@ -30,12 +30,11 @@ export const STAR_PLAYS: Record<StarPlay, { label: string; cost: number; blurb: 
   shield: { label: 'Shield', cost: 2, blurb: 'Not available right now' },
 };
 
-{/*
-   {id: 'solo', mode: 'coop', format: '1v1', name: 'Solo', tag: '1 player', blurb: 'Play the story on your own.', solo: true}
-   */}
+
 
 export const MODE_CARDS: { id: string; mode: Mode; format: Format; name: string; tag: string; blurb: string; solo?: boolean }[] = [
   
+  {id: 'solo', mode: 'coop', format: '1v1', name: 'Solo', tag: '1 player', blurb: 'Play the story on your own.', solo: true},
   { id: 'rival-1v1', mode: 'rival', format: '1v1', name: 'Face Off', tag: '1v1', blurb: 'You against one player. The higher roll wins the scene.' },
   { id: 'coop-1v1', mode: 'coop', format: '1v1', name: 'Link Up', tag: '1v1 co-op', blurb: 'You and a friend team up to face the challenge.' },
   /*
