@@ -430,6 +430,16 @@ const NIGHT_RETURN: Record<string, StageScene> = {
       a('alert', 190, { beat: 'popIn', at: 1.0 }),
     ],
   },
+  // locked gate, a light comes on upstairs
+  home_late: {
+    set: 'gate',
+    cast: [
+      a('generator', 520, { idle: 'rumble' }),
+      a('you', 240, { beat: 'walkInL', for: 1.2, pose: 'stand', idle: 'heave' }),
+      a('gateman', 410, { beat: 'popIn', at: 0.6, pose: 'stand', flip: true }),
+      a('alert', 240, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
   home_safe: {
     set: 'gate',
     cast: [
