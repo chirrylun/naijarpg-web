@@ -82,6 +82,12 @@ export function ChoicePanel({ room, acted }: { room: RoomState; acted: boolean }
                   })()
                 )}
               </span>
+              {!blocked && (
+                <span className="shrink-0 text-right" aria-label={`Roll ${c.dc} or higher`}>
+                  <span className="block text-[10px] font-bold uppercase tracking-wide text-mute">Roll</span>
+                  <span className="font-display text-xl font-extrabold">{c.dc}+</span>
+                </span>
+              )}
             </button>
           );
         })}

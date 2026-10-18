@@ -100,11 +100,15 @@ export function EdgePanel() {
 
         {settled ? (
           <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-            {sum && (
-              <div className="font-display text-3xl font-extrabold">
-                {roll.total} <span className="text-sm font-bold text-mute">({sum})</span>
-              </div>
-            )}
+            <div className="font-display text-3xl font-extrabold">
+              {roll.total} {sum && <span className="text-sm font-bold text-mute">({sum})</span>}
+            </div>
+            <div className="flex items-center justify-center gap-2 text-sm font-bold">
+              <span className="text-mute">You need {roll.dc}</span>
+              <span className={cn('rounded-full px-2.5 py-0.5', roll.passed ? 'bg-brand/15 text-brand' : 'bg-danger/15 text-danger')}>
+                {roll.passed ? '✓ Made it' : '✗ Not yet'}
+              </span>
+            </div>
             {luck && (
               <div className={cn('inline-block rounded-full border px-4 py-1 text-sm font-extrabold', luck.chip)}>
                 {luck.emoji} {luck.label}

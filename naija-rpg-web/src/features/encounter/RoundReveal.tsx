@@ -9,13 +9,20 @@ import type { RollRow, RoomState, RoundResult } from '../../types';
 
 const TIE_STEP_MS = 2600; // keep in step with tieRerollMs on the server
 
-function verdict(result: RoundResult, mine: RollRow | undefined, solo: boolean) {
-  if (result.kind === 'all_pass') return { emoji: '🎉', text: solo ? 'You did it!' : 'You did it together!', tone: 'text-brand' };
-  if (result.kind === 'mixed') return { emoji: '😅', text: 'Some of you did it!', tone: 'text-gold' };
-  if (result.kind === 'all_fail') return { emoji: '😬', text: "It didn't work this time", tone: 'text-danger' };
-  if (mine?.standing === 'won') return { emoji: '🎉', text: 'You win this round!', tone: 'text-gold' };
-  if (mine?.standing === 'lost') return { emoji: '😤', text: 'They win this round', tone: 'text-danger' };
-  return { emoji: '🤝', text: "It's a tie!", tone: 'text-sky' };
+function verdict(result: RoundResult, mine: RollRow | undefined, solo: boolean, race: boolean) {
+  // Races: each side walks its own road, so "who is ahead" and "did my move work" are two separate things
+  if (race) {
+    const worked = mine ? (mine.passed ? 'Your move worked.' : 'Your move missed.') : '';
+    if (mine?.standing === 'won') return { emoji: '🎉', text: 'You pull ahead!', sub: worked, tone: 'text-gold' };
+    if (mine?.standing === 'lost') return { emoji: '😤', text: 'They pull ahead', sub: worked, tone: 'text-danger' };
+    return { emoji: '🤝', text: 'Neck and neck', sub: worked, tone: 'text-sky' };
+  }
+  if (result.kind === 'all_pass') return { emoji: '🎉', text: solo ? 'You did it!' : 'You did it together!', sub: '', tone: 'text-brand' };
+  if (result.kind === 'mixed') return { emoji: '😅', text: 'Some of you did it!', sub: '', tone: 'text-gold' };
+  if (result.kind === 'all_fail') return { emoji: '😬', text: "It didn't work this time", sub: '', tone: 'text-danger' };
+  if (mine?.standing === 'won') return { emoji: '🎉', text: 'You win this round!', sub: '', tone: 'text-gold' };
+  if (mine?.standing === 'lost') return { emoji: '😤', text: 'They win this round', sub: '', tone: 'text-danger' };
+  return { emoji: '🤝', text: "It's a tie!", sub: '', tone: 'text-sky' };
 }
 
 export function RoundReveal({ room, result, myId }: { room: RoomState; result: RoundResult; myId?: string }) {
@@ -55,7 +62,7 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
   const lastTie = ties[ties.length - 1];
   const tiesDone = ties.length === 0 || (tiesShown >= ties.length && lastTieLanded >= (lastTie?.length ?? 0));
   const ready = forced || (allLanded && tiesDone);
-  const v = verdict(result, mine, room.solo);
+  const v = verdict(result, mine, room.solo, room.mode !== 'coop');
 
   return (
     <div className="space-y-5">
@@ -76,6 +83,14 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
               >
                 <div className="font-display text-5xl font-extrabold leading-none">{r.total}</div>
                 {sum && <div className="mt-1 text-xs font-semibold text-mute">{sum}</div>}
+                {typeof r.dc === 'number' && (
+                  <div className="mt-1 flex items-center gap-1.5 text-xs font-bold">
+                    <span className="text-mute">Needed {r.dc}</span>
+                    <span className={cn('rounded-full px-2 py-0.5', r.passed ? 'bg-brand/15 text-brand' : 'bg-danger/15 text-danger')}>
+                      {r.passed ? '✓ Made it' : '✗ Missed'}
+                    </span>
+                  </div>
+                )}
                 {luck && (
                   <div className={cn('mt-2 rounded-full border px-3 py-0.5 text-xs font-extrabold', luck.chip)}>
                     {luck.emoji} {luck.label}
@@ -122,6 +137,7 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
       >
         <div className="text-5xl">{v.emoji}</div>
         <div className={cn('font-display text-2xl font-extrabold', v.tone)}>{v.text}</div>
+        {v.sub && <div className="text-sm font-semibold text-mute">{v.sub}</div>}
         {myId && result.bonusLost?.includes(myId) && result.bonusLostMessage && (
           <p className="mx-auto mt-2 max-w-xs rounded-xl border border-danger/30 bg-danger/10 px-3 py-1.5 text-sm font-semibold text-danger">
             {result.bonusLostMessage}

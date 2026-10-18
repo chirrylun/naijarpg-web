@@ -104,6 +104,8 @@ export type RollRow = {
   modifier: number;
   starBonus: number;
   total: number;
+  dc: number; // the number this roll needed
+  passed: boolean; // did it reach that number
   tier: Tier;
   standing: Standing;
 };
@@ -153,6 +155,8 @@ export type PrivateRoll = {
   modifier: number;
   starBonus: number;
   total: number;
+  dc: number; // the number you need
+  passed: boolean;
   tier: Tier;
   shielded: boolean;
   stars: number;
@@ -166,6 +170,7 @@ export type MarkWho = 'self' | 'rival' | 'world';
 export type SceneChoice = {
   approach: Approach;
   label: string;
+  dc: number; // the number you need to roll
   mods: { mark: string; who: MarkWho; delta: number; label: string }[];
   lock: { mark: string; who: MarkWho; reason: string } | null;
 };
