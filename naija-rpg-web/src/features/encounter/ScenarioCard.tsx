@@ -19,6 +19,12 @@ export function ScenarioCard({ room, ready = true }: { room: RoomState; ready?: 
         animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
         exit={{ opacity: 0, y: -8 }}
       >
+        {room.recap && (
+          <div className="mb-3 rounded-2xl border border-gold/30 bg-gold/5 px-4 py-3">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-gold">What just happened</div>
+            <p className="mt-0.5 text-sm leading-relaxed text-ink/90">{fillNames(room.recap, room, myId)}</p>
+          </div>
+        )}
         <Card>
           <p className="text-xs font-bold uppercase tracking-wider text-mute">{room.scenario.title}</p>
           <h2 className="mt-1 font-display text-2xl font-extrabold">{fillNames(scene.title, room, myId)}</h2>
