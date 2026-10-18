@@ -179,6 +179,37 @@ const AGBERO_WINDOW: Record<string, StageScene> = {
       a('alert', 150, { beat: 'popIn', at: 1.3 }),
     ],
   },
+  // the car bounces down a muddy track to a keke blocking the gap in the wall
+  muddy_shortcut: {
+    set: 'estateGate',
+    cast: [
+      a('bolt', 150, { beat: 'driveInL', for: 1.2 }),
+      a('keke', 420, { flip: true, idle: 'rumble' }),
+      a('kekeRider', 395, { beat: 'popIn', at: 0.9, pose: 'stand', flip: true }),
+      a('zzz', 395, { beat: 'fadeIn', at: 1.1 }),
+    ],
+  },
+  // the road opens up, then a LASTMA officer waves the Bolt to the side
+  airport_road: {
+    set: 'serviceLane',
+    cast: [
+      a('bolt', 200, { beat: 'driveInL', for: 1.0 }),
+      a('lastma', 350, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true, reach: 'front' }),
+      a('lastma', 410, { beat: 'popIn', at: 0.95, pose: 'stand', flip: true }),
+      a('alert', 350, { beat: 'popIn', at: 1.1 }),
+    ],
+  },
+  // two flights landed, Uncle Chuks is somewhere in the crowd
+  arrivals: {
+    set: 'arrivals',
+    cast: [
+      a('trolley', 395),
+      a('uncle', 340, { beat: 'popIn', at: 0.7, pose: 'stand', flip: true }),
+      a('bystanderM', 470, { beat: 'fadeIn', at: 0.4, pose: 'stand', flip: true }),
+      a('bystanderF', 245, { beat: 'fadeIn', at: 0.5, pose: 'stand' }),
+      a('you', 150, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
+    ],
+  },
 };
 
 /* ------------------------------------------------------------------ */
@@ -380,11 +411,173 @@ const NIGHT_RETURN: Record<string, StageScene> = {
       a('you', 290, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
     ],
   },
+  // your street, the gate in sight
+  home_stretch: {
+    set: 'innerStreet',
+    cast: [
+      a('generator', 545, { idle: 'rumble' }),
+      a('you', 170, { beat: 'walkInL', for: 1.3, pose: 'stand', idle: 'heave' }),
+      a('phone', 170, { beat: 'popIn', at: 1.0 }),
+    ],
+  },
+  // phone and money gone, the boys walk off with them
+  mugged: {
+    set: 'barStreet',
+    cast: [
+      a('you', 190, { beat: 'popIn', at: 0.1, pose: 'stand' }),
+      a('thug', 330, { beat: 'walkOffR', at: 0.3, for: 1.3, pose: 'stand' }),
+      a('thugB', 380, { beat: 'walkOffR', at: 0.45, for: 1.3, pose: 'stand' }),
+      a('alert', 190, { beat: 'popIn', at: 1.0 }),
+    ],
+  },
+  home_safe: {
+    set: 'gate',
+    cast: [
+      a('generator', 520, { idle: 'rumble' }),
+      a('gateman', 410, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('you', 250, { beat: 'walkInL', for: 1.3, pose: 'stand', idle: 'heave' }),
+      a('phone', 250, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+  home_battered: {
+    set: 'gate',
+    cast: [
+      a('generator', 520, { idle: 'rumble' }),
+      a('gateman', 410, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('you', 240, { beat: 'walkInL', for: 1.2, pose: 'stand', idle: 'heave' }),
+      a('phone', 240, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+  home_robbed: {
+    set: 'gate',
+    cast: [
+      a('generator', 520, { idle: 'rumble' }),
+      a('gateman', 410, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('you', 240, { beat: 'walkInL', for: 1.2, pose: 'stand', idle: 'heave' }),
+      a('alert', 240, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/*  Oga at the Top: Abuja, one interview, a letter nobody respects      */
+/* ------------------------------------------------------------------ */
+
+const OGA_AT_THE_TOP: Record<string, StageScene> = {
+  // 7am, the phone buzzes in a dark room
+  morning_panic: {
+    set: 'bedroom',
+    cast: [a('you', 300, { beat: 'popIn', at: 0.2, pose: 'stand' }), a('phone', 300, { beat: 'popIn', at: 0.6 }), a('alert', 300, { beat: 'popIn', at: 1.0 })],
+  },
+  sister_network: {
+    set: 'bedroom',
+    cast: [a('you', 300, { pose: 'stand' }), a('phone', 300, { beat: 'popIn', at: 0.3 })],
+  },
+  new_oga_gist: {
+    set: 'bedroom',
+    cast: [a('you', 300, { pose: 'stand' }), a('phone', 300, { beat: 'popIn', at: 0.3 }), a('puff', 330, { beat: 'fadeIn', at: 0.7 })],
+  },
+  taxi_park: {
+    set: 'busStop',
+    cast: [
+      a('okada', 130, { beat: 'driveInL', at: 0.2, for: 1.0 }),
+      a('akaraWoman', 440, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true }),
+      a('conductor', 360, { beat: 'popIn', at: 0.6, pose: 'stand', flip: true, reach: 'front' }),
+      a('you', 200, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
+    ],
+  },
+  ministry_gate: {
+    set: 'ministry',
+    cast: [
+      a('guard', 440, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true, reach: 'front' }),
+      a('you', 190, { beat: 'walkInL', for: 1.1, pose: 'stand' }),
+      a('alert', 190, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+  // the old oga's driver gave you wrong information, the Prado is right there
+  driver_bust: {
+    set: 'ministry',
+    cast: [
+      a('suv', 300, { flip: true, idle: 'rumble' }),
+      a('musa', 400, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('you', 160, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
+      a('alert', 160, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+  driver_shed: {
+    set: 'ministry',
+    cast: [
+      a('musa', 400, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true }),
+      a('boyA', 470, { beat: 'popIn', at: 0.6, pose: 'stand', flip: true }),
+      a('boyB', 520, { beat: 'popIn', at: 0.7, pose: 'stand', flip: true }),
+      a('you', 190, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
+    ],
+  },
+  security_wahala: {
+    set: 'office',
+    cast: [
+      a('supervisor', 320, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true, reach: 'front' }),
+      a('you', 180, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
+      a('alert', 180, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+  secretary_office: {
+    set: 'office',
+    cast: [
+      a('grace', 300, { beat: 'popIn', at: 0.4, pose: 'stand' }),
+      a('bystanderM', 520, { beat: 'fadeIn', at: 0.6, pose: 'stand', flip: true }),
+      a('you', 160, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
+    ],
+  },
+  wrong_office: {
+    set: 'office',
+    cast: [a('you', 200, { beat: 'walkInL', for: 1.1, pose: 'stand' }), a('puff', 340, { beat: 'fadeIn', at: 0.8 }), a('alert', 200, { beat: 'popIn', at: 1.3 })],
+  },
+  lobby_wait: {
+    set: 'office',
+    cast: [
+      a('grace', 300, { beat: 'popIn', at: 0.3, pose: 'stand' }),
+      a('bystanderM', 500, { beat: 'fadeIn', at: 0.5, pose: 'stand', flip: true }),
+      a('bystanderF', 560, { beat: 'fadeIn', at: 0.6, pose: 'stand', flip: true }),
+      a('you', 160, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
+    ],
+  },
+  interview_room: {
+    set: 'office',
+    cast: [
+      a('sule', 300, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true, reach: 'front' }),
+      a('you', 170, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
+    ],
+  },
+  oga_house: {
+    set: 'compound',
+    cast: [
+      a('gateman', 380, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('sule', 440, { beat: 'popIn', at: 0.9, pose: 'stand', flip: true }),
+      a('you', 180, { beat: 'walkInL', for: 1.1, pose: 'stand' }),
+    ],
+  },
+  interview_success: {
+    set: 'office',
+    cast: [
+      a('sule', 300, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true, reach: 'front' }),
+      a('you', 190, { beat: 'walkInL', for: 1.0, pose: 'stand', reach: 'front' }),
+    ],
+  },
+  interview_fail: {
+    set: 'ministry',
+    cast: [a('you', 330, { beat: 'walkOffR', at: 0.2, for: 1.6, pose: 'stand' }), a('guard', 440, { beat: 'popIn', at: 0.3, pose: 'stand', flip: true }), a('puff', 330, { beat: 'fadeIn', at: 0.6 })],
+  },
+  interview_waitlist: {
+    set: 'office',
+    cast: [a('sule', 300, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true }), a('box', 330, { beat: 'popIn', at: 0.8 }), a('you', 170, { beat: 'walkInL', for: 1.0, pose: 'stand' })],
+  },
 };
 
 export const STAGES: Record<string, Record<string, StageScene>> = {
   'agbero-window': AGBERO_WINDOW,
   'night-return': NIGHT_RETURN,
+  'oga-at-the-top': OGA_AT_THE_TOP,
 };
 
 /** Shown for any scene that has no entry yet, so a new scenario never breaks the page. */

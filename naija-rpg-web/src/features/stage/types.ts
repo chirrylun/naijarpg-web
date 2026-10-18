@@ -14,7 +14,12 @@ export type SetId =
   | 'innerStreet'
   | 'generatorRow'
   | 'barStreet'
-  | 'gate';
+  | 'gate'
+  // Oga at the Top (day)
+  | 'ministry'
+  | 'office'
+  | 'bedroom'
+  | 'compound';
 
 export type PersonId = keyof typeof PERSONS;
 export type VehicleId = 'bolt' | 'suv' | 'keke' | 'okada' | 'danfo';

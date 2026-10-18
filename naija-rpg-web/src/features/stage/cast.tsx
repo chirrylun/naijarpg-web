@@ -36,6 +36,11 @@ export const PERSONS = {
   thug: { skin: '#8a5a3c', top: '#2b2f3a', bottom: '#1d2430', shoes: '#15191c', head: 'hair' },
   thugB: { skin: '#6b4128', top: '#3a2f2f', bottom: '#1d2430', shoes: '#15191c', head: 'cap', headColor: '#1d2430' },
   stranger: { skin: '#7a4a30', top: '#1d2430', bottom: '#12161c', shoes: '#0d1013', head: 'cap', headColor: '#12161c' },
+  // ministry
+  grace: { skin: '#7a4a30', top: '#2a8a6b', bottom: '#2a8a6b', shoes: '#f0e6d2', head: 'gele', headColor: '#d9a21b', dress: true },
+  sule: { skin: '#8a5a3c', top: '#e8efe9', bottom: '#222a3a', shoes: '#15191c', head: 'hair' },
+  musa: { skin: '#6b4128', top: '#8a8f94', bottom: '#2b2f3a', shoes: '#15191c', head: 'cap', headColor: '#2b2f3a' },
+  supervisor: { skin: '#6b4128', top: '#3b4a6b', bottom: '#22283a', shoes: '#15191c', head: 'hair' },
 } satisfies Record<string, PersonProps>;
 
 export type ArtCtx = {

@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import { CarRow, DUSK, GROUND, Lamp, NIGHT, Palm, Road, Shops, Sign, Skyline, Sky, House, Wall, W, H } from './scenery';
+import type { Mood } from './scenery';
 import type { SetId } from './types';
 
 /**
@@ -278,6 +279,135 @@ function Gate({ uid }: SetProps) {
   );
 }
 
+/* ---------------------------- Oga at the Top (day) ---------------------------- */
+
+const DAY: Mood = {
+  sky: ['#7fb6d8', '#b8d9ea', '#f2e6c4'],
+  far: '#8aa59a',
+  mid: '#6f8f83',
+  road: '#4a524e',
+  curb: '#5d6762',
+  line: '#e6c75a',
+  window: '#fff3c4',
+};
+
+function Ministry({ uid }: SetProps) {
+  const m = DAY;
+  return (
+    <>
+      <Sky id={uid} mood={m} />
+      <Skyline mood={m} base={120} lit={false} />
+      {/* the ministry block */}
+      <rect x={150} y={52} width={300} height={116} fill="#c9c2ae" />
+      <rect x={150} y={52} width={300} height={7} fill="#a39d8a" />
+      {[170, 214, 258, 302, 346, 390, 424].map((x) => (
+        <rect key={x} x={x} y={78} width={14} height={90} fill="#ddd6c2" />
+      ))}
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <rect key={i} x={164 + i * 46} y={66} width={9} height={8} fill="#7fb6d8" opacity={0.7} />
+      ))}
+      <Sign x={226} y={34} w={148} text="FEDERAL MINISTRY" bg="#0e5a3a" color="#f4f8f5" />
+      {/* gate bar and gatehouse */}
+      <rect x={470} y={112} width={64} height={56} fill="#8f8a78" />
+      <rect x={478} y={122} width={22} height={18} fill="#9fd8ff" opacity={0.5} />
+      <rect x={20} y={134} width={110} height={5} fill="#c9473f" />
+      <rect x={20} y={134} width={5} height={34} fill="#6b6a62" />
+      <Palm x={560} />
+      <rect y={168} width={W} height={H - 168} fill={m.road} />
+      <rect y={168} width={W} height={5} fill={m.curb} />
+    </>
+  );
+}
+
+function Office({ uid }: SetProps) {
+  return (
+    <>
+      <defs>
+        <linearGradient id={uid} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#d8d2bf" />
+          <stop offset="1" stopColor="#c2bba5" />
+        </linearGradient>
+      </defs>
+      <rect width={W} height={H} fill={`url(#${uid})`} />
+      {/* ceiling fan, turning slowly */}
+      <g className="stg-glow">
+        <rect x={296} y={0} width={8} height={18} fill="#5d6762" />
+        <rect x={262} y={18} width={76} height={5} rx={2} fill="#5d6762" />
+      </g>
+      {/* window and light */}
+      <rect x={60} y={44} width={96} height={74} fill="#9fd8ff" opacity={0.55} />
+      <rect x={106} y={44} width={4} height={74} fill="#b8b09a" />
+      <rect x={60} y={79} width={96} height={4} fill="#b8b09a" />
+      {/* door with nameplate */}
+      <rect x={400} y={60} width={64} height={108} fill="#6b4a32" />
+      <rect x={414} y={74} width={36} height={10} fill="#e8d9a0" />
+      {/* desk and files */}
+      <rect x={226} y={128} width={150} height={9} fill="#5a3d28" />
+      <rect x={232} y={137} width={8} height={31} fill="#4a3220" />
+      <rect x={362} y={137} width={8} height={31} fill="#4a3220" />
+      <rect x={250} y={116} width={30} height={12} fill="#f4f0e2" />
+      <rect x={300} y={112} width={26} height={16} fill="#e8e2cc" />
+      {/* chairs along the wall */}
+      {[490, 530, 570].map((x) => (
+        <g key={x}>
+          <rect x={x - 12} y={138} width={24} height={6} fill="#3b4a6b" />
+          <rect x={x - 10} y={144} width={4} height={24} fill="#2a3550" />
+          <rect x={x + 6} y={144} width={4} height={24} fill="#2a3550" />
+        </g>
+      ))}
+      <rect y={168} width={W} height={H - 168} fill="#8f8872" />
+      <rect y={168} width={W} height={4} fill="#a39d8a" />
+    </>
+  );
+}
+
+function Bedroom({ uid }: SetProps) {
+  return (
+    <>
+      <defs>
+        <linearGradient id={uid} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#3a3f55" />
+          <stop offset="1" stopColor="#4f4a52" />
+        </linearGradient>
+      </defs>
+      <rect width={W} height={H} fill={`url(#${uid})`} />
+      {/* early morning window */}
+      <rect x={70} y={38} width={110} height={80} fill="#e38b3f" opacity={0.55} />
+      <rect x={122} y={38} width={4} height={80} fill="#2a2f40" />
+      <rect x={70} y={76} width={110} height={4} fill="#2a2f40" />
+      {/* bed */}
+      <rect x={380} y={118} width={190} height={50} rx={5} fill="#2f6f5a" />
+      <rect x={380} y={104} width={36} height={28} rx={6} fill="#e8efe9" />
+      <rect x={374} y={96} width={6} height={72} fill="#2a2f40" />
+      {/* wardrobe */}
+      <rect x={236} y={64} width={70} height={104} fill="#5a3d28" />
+      <line x1={271} y1={64} x2={271} y2={168} stroke="#3a281a" strokeWidth={2} />
+      <rect y={168} width={W} height={H - 168} fill="#38343c" />
+      <rect y={168} width={W} height={4} fill="#4a4550" />
+    </>
+  );
+}
+
+function Compound({ uid }: SetProps) {
+  const m = DAY;
+  return (
+    <>
+      <Sky id={uid} mood={m} />
+      <Skyline mood={m} base={120} lit={false} />
+      <House x={200} w={200} h={54} base={150} mood={m} windows={5} fill="#cfc7b0" />
+      <Palm x={60} />
+      <Palm x={540} />
+      {/* high fence and gate */}
+      <Wall x={0} w={600} h={54} base={168} fill="#d8d0b8" />
+      <rect x={260} y={114} width={80} height={54} fill="#3b4a6b" />
+      <line x1={300} y1={114} x2={300} y2={168} stroke="#22283a" strokeWidth={2} />
+      <rect x={398} y={104} width={14} height={10} rx={3} fill="#fff3c4" opacity={0.9} className="stg-glow" />
+      <rect y={168} width={W} height={H - 168} fill={m.road} />
+      <rect y={168} width={W} height={5} fill={m.curb} />
+    </>
+  );
+}
+
 const SETS: Record<SetId, (p: SetProps) => ReactNode> = {
   goSlow: GoSlow,
   serviceLane: ServiceLane,
@@ -290,6 +420,10 @@ const SETS: Record<SetId, (p: SetProps) => ReactNode> = {
   generatorRow: GeneratorRow,
   barStreet: BarStreet,
   gate: Gate,
+  ministry: Ministry,
+  office: Office,
+  bedroom: Bedroom,
+  compound: Compound,
 };
 
 export function Backdrop({ set }: { set: SetId }) {
