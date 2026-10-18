@@ -196,78 +196,119 @@ const NIGHT_RETURN: Record<string, StageScene> = {
       a('rival', 250, { beat: 'popIn', at: 0.25, pose: 'stand', duo: true }),
     ],
   },
-  keke: {
+
+  /* ---- first move: what happened at the junction ---- */
+  // won the keke: rider is awake and the engine is running
+  keke_ride: {
     set: 'junction',
     cast: [
-      a('keke', 400, { flip: true, idle: 'rumble' }),
-      a('kekeRider', 345, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true, idle: 'heave' }),
-      a('you', 160, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
-      a('rival', 100, { beat: 'walkInL', at: 0.15, for: 1.0, pose: 'stand', duo: true }),
+      a('keke', 480, { flip: true, idle: 'rumble' }),
+      a('kekeRider', 405, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true }),
+      a('you', 260, { beat: 'walkInL', for: 0.9, pose: 'stand' }),
     ],
   },
-  stuck_junction: {
+  // lost the keke: tail light leaves, an okada slows down beside you
+  keke_gone: {
     set: 'junction',
     cast: [
-      a('keke', 400, { beat: 'driveOutR', for: 1.1 }),
-      a('you', 160, { pose: 'stand' }),
-      a('thug', 400, { beat: 'walkInR', at: 0.5, for: 1.0, pose: 'stand', reach: 'front' }),
-      a('thugB', 470, { beat: 'walkInR', at: 0.7, for: 1.0, pose: 'stand' }),
+      a('keke', 300, { beat: 'driveOutR', at: 0.1, for: 1.4 }),
+      a('you', 250, { beat: 'popIn', at: 0.1, pose: 'stand' }),
+      a('okada', 520, { flip: true, beat: 'driveInR', at: 0.8, for: 0.9 }),
+      a('alert', 250, { beat: 'popIn', at: 1.4 }),
     ],
   },
-  loud_call: {
-    set: 'junction',
-    cast: [
-      a('you', 240, { pose: 'stand' }),
-      a('phone', 240, { beat: 'popIn', at: 0.1 }),
-      a('torch', 480, { beat: 'fadeIn', at: 0.3 }),
-      a('thug', 490, { beat: 'popIn', at: 0.45, pose: 'stand', flip: true }),
-      a('thugB', 130, { beat: 'walkInL', at: 0.5, for: 0.9, pose: 'stand' }),
-      a('alert', 240, { beat: 'popIn', at: 1.0 }),
-    ],
-  },
-  main_road: {
+  // main road, nobody has noticed you yet
+  road_clear: {
     set: 'mainRoad',
     cast: [
-      a('okada', 300, { y: 178, idle: 'crossL', idleFor: 9, at: 1.0 }),
-      a('you', 210, { beat: 'walkInL', for: 1.4, pose: 'stand' }),
-      a('rival', 150, { beat: 'walkInL', at: 0.15, for: 1.4, pose: 'stand', duo: true }),
+      a('you', 200, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
+      a('thug', 490, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
+      a('thugB', 545, { beat: 'popIn', at: 1.0, pose: 'stand', flip: true }),
     ],
   },
-  rope: {
+  // you tripped, the phone is in the weeds and the boys heard it
+  road_snag: {
     set: 'mainRoad',
     cast: [
-      a('rope', 340, { beat: 'fadeIn', at: 0.1, idle: 'sway' }),
-      a('lantern', 505, { beat: 'fadeIn', at: 0.2 }),
-      a('boyA', 435, { beat: 'popIn', at: 0.35, pose: 'stand', flip: true }),
-      a('boyB', 470, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
-      a('boyC', 535, { beat: 'popIn', at: 0.65, pose: 'stand', flip: true }),
-      a('bigBoy', 565, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
-      a('you', 170, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
-      a('rival', 115, { beat: 'walkInL', at: 0.15, for: 1.2, pose: 'stand', duo: true }),
+      a('you', 190, { beat: 'popIn', at: 0.1, pose: 'stand' }),
+      a('phone', 255, { beat: 'popIn', at: 0.3 }),
+      a('thug', 470, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
+      a('thugB', 530, { beat: 'popIn', at: 1.0, pose: 'stand', flip: true }),
+      a('alert', 470, { beat: 'popIn', at: 1.3 }),
     ],
   },
-  inner_street: {
+  // the fake call lands and three guys go quiet
+  call_works: {
+    set: 'barStreet',
+    cast: [
+      a('you', 190, { beat: 'walkInL', for: 0.9, pose: 'stand' }),
+      a('phone', 190, { beat: 'popIn', at: 0.6 }),
+      a('boyA', 400, { beat: 'popIn', at: 0.6, pose: 'stand', flip: true }),
+      a('boyB', 455, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
+      a('boyC', 510, { beat: 'popIn', at: 1.0, pose: 'stand', flip: true }),
+    ],
+  },
+  // the fake call is caught
+  call_exposed: {
+    set: 'barStreet',
+    cast: [
+      a('you', 190, { beat: 'walkInL', for: 0.9, pose: 'stand' }),
+      a('phone', 190, { beat: 'popIn', at: 0.6 }),
+      a('thug', 370, { beat: 'popIn', at: 0.6, pose: 'guard', flip: true }),
+      a('thugB', 435, { beat: 'popIn', at: 0.8, pose: 'guard', flip: true }),
+      a('boyA', 500, { beat: 'popIn', at: 1.0, pose: 'stand', flip: true }),
+      a('torch', 370, { beat: 'fadeIn', at: 0.9, for: 0.25 }),
+      a('alert', 190, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+  // inner street: people out, corn on the coals, draughts under a bulb
+  corn_aunty: {
     set: 'innerStreet',
     cast: [
-      a('lantern', 285, { beat: 'fadeIn' }),
-      a('akaraWoman', 260, { beat: 'popIn', at: 0.1, pose: 'stand', flip: true, idle: 'sway' }),
-      a('boyA', 382, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
-      a('boyB', 408, { beat: 'popIn', at: 0.65, pose: 'stand', flip: true }),
-      a('boyC', 434, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
-      a('you', 120, { beat: 'walkInL', for: 1.1, pose: 'stand' }),
+      a('generator', 545, { idle: 'rumble' }),
+      a('akaraWoman', 420, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true }),
+      a('bystanderM', 320, { beat: 'popIn', at: 0.6, pose: 'stand' }),
+      a('you', 170, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
     ],
   },
-  pocket_check: {
+  // burial canopy across the whole street
+  street_blocked: {
     set: 'generatorRow',
     cast: [
-      a('generator', 520, { idle: 'rumble' }),
-      a('you', 300, { beat: 'walkInL', for: 0.9, pose: 'stand' }),
-      a('thug', 355, { beat: 'popIn', at: 0.6, pose: 'stand', flip: true, reach: 'front' }),
-      a('thugB', 245, { beat: 'popIn', at: 0.75, pose: 'stand' }),
-      a('alert', 300, { beat: 'popIn', at: 1.0 }),
+      a('generator', 55, { idle: 'rumble' }),
+      a('generator', 565, { idle: 'rumble' }),
+      a('bystanderM', 150, { beat: 'popIn', at: 0.6, pose: 'stand' }),
+      a('bystanderF', 450, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
+      a('guard', 510, { beat: 'popIn', at: 1.0, pose: 'stand', flip: true }),
+      a('you', 300, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
+      a('alert', 300, { beat: 'popIn', at: 1.25 }),
     ],
   },
-  vigilante: {
+
+  /* ---- the bridge, the post, the lane ---- */
+  // boys on the railings, Ajala comes down to name the price
+  bridge_toll: {
+    set: 'barStreet',
+    cast: [
+      a('you', 170, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
+      a('thug', 380, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('thugB', 445, { beat: 'popIn', at: 0.7, pose: 'stand', flip: true }),
+      a('boyA', 505, { beat: 'popIn', at: 0.9, pose: 'stand', flip: true }),
+    ],
+  },
+  // they are off the railing and in a half circle, one with a plank
+  bridge_heated: {
+    set: 'barStreet',
+    cast: [
+      a('you', 170, { beat: 'popIn', at: 0.1, pose: 'stand' }),
+      a('thug', 330, { beat: 'popIn', at: 0.3, pose: 'guard', flip: true }),
+      a('thugB', 395, { beat: 'popIn', at: 0.5, pose: 'guard', flip: true }),
+      a('boyA', 460, { beat: 'popIn', at: 0.7, pose: 'guard', flip: true }),
+      a('stick', 358, { beat: 'popIn', at: 0.8, flip: true }),
+      a('alert', 170, { beat: 'popIn', at: 1.1 }),
+    ],
+  },
+  vigilante_post: {
     set: 'innerStreet',
     cast: [
       a('you', 190, { beat: 'walkInL', for: 0.9, pose: 'stand' }),
@@ -279,34 +320,18 @@ const NIGHT_RETURN: Record<string, StageScene> = {
       a('alert', 190, { beat: 'popIn', at: 1.1 }),
     ],
   },
-  // a fight spills out of the bar, a man is thrown across the road, everybody runs
-  uproar: {
-    set: 'barStreet',
+  // dark lane, one man smoking outside his gate
+  back_lane: {
+    set: 'innerStreet',
     cast: [
-      a('thug', 180, { pose: 'guard' }),
-      a('thugB', 235, { pose: 'guard', flip: true }),
-      a('boyA', 330, { beat: 'tossL', at: 0.2, for: 0.7, pose: 'stand' }),
-      a('bystanderM', 300, { idle: 'crossR', idleFor: 4.5, at: 0.8 }),
-      a('bystanderF', 300, { idle: 'crossL', idleFor: 5.2, at: 1.0 }),
-      a('boyB', 300, { y: 188, idle: 'crossL', idleFor: 4.2, at: 1.4 }),
-      a('you', 490, { beat: 'popIn', at: 0.1, pose: 'stand', flip: true }),
-      a('alert', 490, { beat: 'popIn', at: 1.0 }),
+      a('you', 150, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
+      a('stranger', 450, { beat: 'popIn', at: 0.9, pose: 'stand', flip: true }),
+      a('puff', 430, { beat: 'fadeIn', at: 1.1, for: 0.3 }),
+      a('alert', 150, { beat: 'popIn', at: 1.4 }),
     ],
   },
-  generator_row: {
-    set: 'generatorRow',
-    cast: [
-      a('generator', 55, { idle: 'rumble' }),
-      a('generator', 565, { idle: 'rumble' }),
-      a('bystanderM', 150, { beat: 'popIn', at: 0.6, pose: 'stand' }),
-      a('phone', 150, { beat: 'popIn', at: 0.75 }),
-      a('bystanderF', 450, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
-      a('phone', 450, { beat: 'popIn', at: 0.95, flip: true }),
-      a('boyA', 510, { beat: 'popIn', at: 1.0, pose: 'stand', flip: true }),
-      a('you', 300, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
-      a('alert', 300, { beat: 'popIn', at: 1.25 }),
-    ],
-  },
+
+  /* ---- your gate, five ways ---- */
   gate_clean: {
     set: 'gate',
     cast: [
@@ -331,6 +356,28 @@ const NIGHT_RETURN: Record<string, StageScene> = {
       a('stranger', 105, { y: 178, scale: 1, beat: 'walkInL', at: 0.5, for: 1.1, pose: 'stand' }),
       a('you', 300, { beat: 'walkInL', for: 1.1, pose: 'stand' }),
       a('alert', 300, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+  // no phone, no money, Mallam slides the bolt
+  gate_robbed: {
+    set: 'gate',
+    cast: [
+      a('generator', 520, { idle: 'rumble' }),
+      a('gateman', 410, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('you', 240, { beat: 'walkInL', for: 1.1, pose: 'stand', idle: 'heave' }),
+      a('alert', 240, { beat: 'popIn', at: 1.3 }),
+    ],
+  },
+  // vigilante men stand off with their lamps while Mallam looks them over
+  gate_escorted: {
+    set: 'gate',
+    cast: [
+      a('generator', 540, { idle: 'rumble' }),
+      a('gateman', 440, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
+      a('vigilante', 90, { beat: 'popIn', at: 0.3, pose: 'stand' }),
+      a('lantern', 90, { beat: 'fadeIn', at: 0.4, for: 0.25 }),
+      a('vigilante', 160, { beat: 'popIn', at: 0.5, pose: 'stand' }),
+      a('you', 290, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
     ],
   },
 };
