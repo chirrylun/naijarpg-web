@@ -179,9 +179,7 @@ export default function PlayPage() {
                 <div className="text-xs font-bold uppercase tracking-wide text-brand">{m.tag}</div>
                 <div className="font-display text-lg font-extrabold">{m.name}</div>
                 <p className="mt-1 text-xs text-mute">{m.blurb}</p>
-                <p className="mt-2 text-[11px] font-bold text-gold">
-                  ★{ENTRY_COST[entryKind(m)]} to play · win ★{PAYOUT[entryKind(m)]} back
-                </p>
+                
               </div>
             </button>
           ))}
