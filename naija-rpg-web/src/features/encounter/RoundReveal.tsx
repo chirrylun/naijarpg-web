@@ -83,7 +83,7 @@ export function RoundReveal({ room, result, myId }: { room: RoomState; result: R
               >
                 <div className="font-display text-5xl font-extrabold leading-none">{r.total}</div>
                 {sum && <div className="mt-1 text-xs font-semibold text-mute">{sum}</div>}
-                {typeof r.dc === 'number' && (
+                {r.dc !== null && (
                   <div className="mt-1 flex items-center gap-1.5 text-xs font-bold">
                     <span className="text-mute">Needed {r.dc}</span>
                     <span className={cn('rounded-full px-2 py-0.5', r.passed ? 'bg-brand/15 text-brand' : 'bg-danger/15 text-danger')}>
