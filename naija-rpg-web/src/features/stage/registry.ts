@@ -54,49 +54,7 @@ const AGBERO_WINDOW: Record<string, StageScene> = {
     set: 'goSlow',
     cast: [
       a('bolt', 210, { idle: 'rumble' }),
-      a('kayode', 330, { beat: 'popIn', at: 0.1, pose: 'stand', reach: 'front', flip: true, idle: 'sway' }),
-    ],
-  },
-  second_boy: {
-    set: 'goSlow',
-    cast: [
-      a('bolt', 210, { idle: 'rumble' }),
-      a('kayode', 320, { pose: 'stand', flip: true }),
-      a('bigBoy', 400, { beat: 'walkInR', for: 0.9, pose: 'stand', reach: 'front' }),
-      a('boyA', 105, { beat: 'walkInL', at: 0.25, for: 1.0, pose: 'stand' }),
-      a('boyB', 150, { beat: 'walkInL', at: 0.4, for: 1.0, pose: 'stand' }),
-    ],
-  },
-  viral: {
-    set: 'goSlow',
-    cast: [
-      a('bolt', 210, { idle: 'rumble' }),
-      a('kayode', 330, { pose: 'stand', flip: true, idle: 'hop' }),
-      a('hawker', 470, { beat: 'walkInR', for: 1.0, pose: 'stand' }),
-      a('whiteShirt', 410, { beat: 'walkInR', at: 0.2, for: 0.9, pose: 'stand', reach: 'front' }),
-      a('bystanderM', 70, { beat: 'walkInL', at: 0.1, for: 1.0, pose: 'stand' }),
-      a('phone', 70, { beat: 'popIn', at: 1.0 }),
-      a('bystanderF', 540, { beat: 'walkInR', at: 0.3, for: 1.0, pose: 'stand' }),
-      a('phone', 540, { beat: 'popIn', at: 1.15, flip: true }),
-    ],
-  },
-  femi_gist: {
-    set: 'goSlow',
-    cast: [
-      a('bolt', 210, { idle: 'rumble' }),
-      // Kayode gives up and drifts off, and Mr. Femi finally speaks
-      a('kayode', 330, { beat: 'walkOffR', at: 0.1, for: 1.3, pose: 'stand' }),
-    ],
-  },
-  banging: {
-    set: 'goSlow',
-    cast: [
-      a('bolt', 210, { idle: 'rumble' }),
-      a('kayode', 330, { pose: 'stand', flip: true, reach: 'front' }),
-      a('bigBoy', 400, { beat: 'walkInR', at: 0.1, for: 0.8, pose: 'stand', reach: 'front' }),
-      a('boyA', 120, { beat: 'walkInL', at: 0.2, for: 0.9, pose: 'stand', reach: 'front' }),
-      a('boyB', 470, { beat: 'walkInR', at: 0.3, for: 0.9, pose: 'stand' }),
-      a('alert', 330, { beat: 'popIn', at: 0.9 }),
+      a('kayode', 330, { beat: 'walkInR', at: 0.1, for: 0.9, pose: 'stand', reach: 'front', idle: 'sway' }),
     ],
   },
   // the back road: the Bolt rolls up to a chained gate
@@ -138,25 +96,6 @@ const AGBERO_WINDOW: Record<string, StageScene> = {
       a('you', 440, { pose: 'stand', flip: true }),
       a('okada', 130, { beat: 'driveInL', at: 0.3, for: 1.0 }),
       a('okada', 215, { beat: 'driveInL', at: 0.5, for: 1.0 }),
-    ],
-  },
-  // phone rings at the bus stop and a plane crosses the sky
-  uncle_call: {
-    set: 'busStop',
-    cast: [
-      a('plane', 120, { y: 58, idle: 'crossR', idleFor: 16 }),
-      a('you', 300, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
-      a('phone', 300, { beat: 'popIn', at: 1.0 }),
-      a('alert', 300, { beat: 'popIn', at: 1.15 }),
-    ],
-  },
-  arrivals_clean: {
-    set: 'arrivals',
-    cast: [
-      a('trolley', 395),
-      a('uncle', 340, { beat: 'popIn', at: 0.7, pose: 'stand', flip: true, reach: 'front' }),
-      a('you', 150, { beat: 'walkInL', for: 1.2, pose: 'stand' }),
-      a('bystanderF', 500, { beat: 'fadeIn', at: 0.4, pose: 'stand', flip: true }),
     ],
   },
   arrivals_late: {
@@ -261,8 +200,8 @@ const NIGHT_RETURN: Record<string, StageScene> = {
   road_snag: {
     set: 'mainRoad',
     cast: [
-      a('you', 190, { beat: 'popIn', at: 0.1, pose: 'stand' }),
-      a('phone', 255, { beat: 'popIn', at: 0.3 }),
+      a('you', 190, { beat: 'walkInL', for: 0.8, pose: 'stand' }),
+      a('phone', 255, { beat: 'tossL', at: 0.6 }),
       a('thug', 470, { beat: 'popIn', at: 0.8, pose: 'stand', flip: true }),
       a('thugB', 530, { beat: 'popIn', at: 1.0, pose: 'stand', flip: true }),
       a('alert', 470, { beat: 'popIn', at: 1.3 }),
@@ -331,10 +270,10 @@ const NIGHT_RETURN: Record<string, StageScene> = {
   bridge_heated: {
     set: 'barStreet',
     cast: [
-      a('you', 170, { beat: 'popIn', at: 0.1, pose: 'stand' }),
-      a('thug', 330, { beat: 'popIn', at: 0.3, pose: 'guard', flip: true }),
-      a('thugB', 395, { beat: 'popIn', at: 0.5, pose: 'guard', flip: true }),
-      a('boyA', 460, { beat: 'popIn', at: 0.7, pose: 'guard', flip: true }),
+      a('you', 170, { beat: 'walkInL', for: 0.8, pose: 'stand' }),
+      a('thug', 330, { beat: 'walkInR', at: 0.2, for: 0.9, pose: 'guard' }),
+      a('thugB', 395, { beat: 'walkInR', at: 0.35, for: 0.9, pose: 'guard' }),
+      a('boyA', 460, { beat: 'walkInR', at: 0.5, for: 0.9, pose: 'guard' }),
       a('stick', 358, { beat: 'popIn', at: 0.8, flip: true }),
       a('alert', 170, { beat: 'popIn', at: 1.1 }),
     ],
@@ -362,74 +301,7 @@ const NIGHT_RETURN: Record<string, StageScene> = {
     ],
   },
 
-  /* ---- your gate, five ways ---- */
-  gate_clean: {
-    set: 'gate',
-    cast: [
-      a('generator', 520, { idle: 'rumble' }),
-      a('you', 250, { beat: 'walkInL', for: 1.3, pose: 'stand', idle: 'heave' }),
-    ],
-  },
-  gate_shaken: {
-    set: 'gate',
-    cast: [
-      a('generator', 520, { idle: 'rumble' }),
-      a('gateman', 400, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
-      a('zzz', 400, { beat: 'fadeIn', at: 0.8 }),
-      a('you', 240, { beat: 'walkInL', for: 1.1, pose: 'stand', idle: 'heave' }),
-    ],
-  },
-  gate_followed: {
-    set: 'gate',
-    cast: [
-      a('generator', 520, { idle: 'rumble' }),
-      a('gateman', 410, { beat: 'popIn', at: 0.4, pose: 'stand', flip: true }),
-      a('stranger', 105, { y: 178, scale: 1, beat: 'walkInL', at: 0.5, for: 1.1, pose: 'stand' }),
-      a('you', 300, { beat: 'walkInL', for: 1.1, pose: 'stand' }),
-      a('alert', 300, { beat: 'popIn', at: 1.3 }),
-    ],
-  },
-  // no phone, no money, Mallam slides the bolt
-  gate_robbed: {
-    set: 'gate',
-    cast: [
-      a('generator', 520, { idle: 'rumble' }),
-      a('gateman', 410, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
-      a('you', 240, { beat: 'walkInL', for: 1.1, pose: 'stand', idle: 'heave' }),
-      a('alert', 240, { beat: 'popIn', at: 1.3 }),
-    ],
-  },
-  // vigilante men stand off with their lamps while Mallam looks them over
-  gate_escorted: {
-    set: 'gate',
-    cast: [
-      a('generator', 540, { idle: 'rumble' }),
-      a('gateman', 440, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
-      a('vigilante', 90, { beat: 'popIn', at: 0.3, pose: 'stand' }),
-      a('lantern', 90, { beat: 'fadeIn', at: 0.4, for: 0.25 }),
-      a('vigilante', 160, { beat: 'popIn', at: 0.5, pose: 'stand' }),
-      a('you', 290, { beat: 'walkInL', for: 1.0, pose: 'stand' }),
-    ],
-  },
-  // your street, the gate in sight
-  home_stretch: {
-    set: 'innerStreet',
-    cast: [
-      a('generator', 545, { idle: 'rumble' }),
-      a('you', 170, { beat: 'walkInL', for: 1.3, pose: 'stand', idle: 'heave' }),
-      a('phone', 170, { beat: 'popIn', at: 1.0 }),
-    ],
-  },
-  // phone and money gone, the boys walk off with them
-  mugged: {
-    set: 'barStreet',
-    cast: [
-      a('you', 190, { beat: 'popIn', at: 0.1, pose: 'stand' }),
-      a('thug', 330, { beat: 'walkOffR', at: 0.3, for: 1.3, pose: 'stand' }),
-      a('thugB', 380, { beat: 'walkOffR', at: 0.45, for: 1.3, pose: 'stand' }),
-      a('alert', 190, { beat: 'popIn', at: 1.0 }),
-    ],
-  },
+  /* ---- home ---- */
   // locked gate, a light comes on upstairs
   home_late: {
     set: 'gate',
@@ -449,24 +321,6 @@ const NIGHT_RETURN: Record<string, StageScene> = {
       a('phone', 250, { beat: 'popIn', at: 1.3 }),
     ],
   },
-  home_battered: {
-    set: 'gate',
-    cast: [
-      a('generator', 520, { idle: 'rumble' }),
-      a('gateman', 410, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
-      a('you', 240, { beat: 'walkInL', for: 1.2, pose: 'stand', idle: 'heave' }),
-      a('phone', 240, { beat: 'popIn', at: 1.3 }),
-    ],
-  },
-  home_robbed: {
-    set: 'gate',
-    cast: [
-      a('generator', 520, { idle: 'rumble' }),
-      a('gateman', 410, { beat: 'popIn', at: 0.5, pose: 'stand', flip: true }),
-      a('you', 240, { beat: 'walkInL', for: 1.2, pose: 'stand', idle: 'heave' }),
-      a('alert', 240, { beat: 'popIn', at: 1.3 }),
-    ],
-  },
 };
 
 /* ------------------------------------------------------------------ */
@@ -477,15 +331,26 @@ const OGA_AT_THE_TOP: Record<string, StageScene> = {
   // 7am, the phone buzzes in a dark room
   morning_panic: {
     set: 'bedroom',
-    cast: [a('you', 300, { beat: 'popIn', at: 0.2, pose: 'stand' }), a('phone', 300, { beat: 'popIn', at: 0.6 }), a('alert', 300, { beat: 'popIn', at: 1.0 })],
+    cast: [
+      a('you', 300, { beat: 'riseIn', at: 0.1, for: 0.5, pose: 'stand' }),
+      a('phone', 300, { beat: 'popIn', at: 0.6, idle: 'hop', idleFor: 0.5 }),
+      a('alert', 300, { beat: 'popIn', at: 1.0 }),
+    ],
   },
   sister_network: {
     set: 'bedroom',
-    cast: [a('you', 300, { pose: 'stand' }), a('phone', 300, { beat: 'popIn', at: 0.3 })],
+    cast: [
+      a('you', 300, { beat: 'walkInL', for: 0.9, pose: 'stand' }),
+      a('phone', 300, { beat: 'popIn', at: 0.9, idle: 'hop', idleFor: 0.6 }),
+    ],
   },
   new_oga_gist: {
     set: 'bedroom',
-    cast: [a('you', 300, { pose: 'stand' }), a('phone', 300, { beat: 'popIn', at: 0.3 }), a('puff', 330, { beat: 'fadeIn', at: 0.7 })],
+    cast: [
+      a('you', 300, { beat: 'walkInL', for: 0.9, pose: 'stand' }),
+      a('phone', 300, { beat: 'popIn', at: 0.9, idle: 'hop', idleFor: 0.6 }),
+      a('puff', 330, { beat: 'fadeIn', at: 1.3 }),
+    ],
   },
   taxi_park: {
     set: 'busStop',
