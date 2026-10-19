@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
-import { REFERRAL_STARS } from '@/lib/constants';
+import { REFERRAL_MIN_GAMES, REFERRAL_STARS } from '@/lib/constants';
 import { copyText, whatsappUrl } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -24,7 +24,7 @@ export function ReferralCard() {
   return (
     <Card className="border-gold/30 bg-gold/5">
       <div className="font-display text-lg font-extrabold">Invite friends, get ★ {REFERRAL_STARS} each</div>
-      <p className="mt-1 text-sm text-mute">You both get stars when your friend finishes their first game.</p>
+      <p className="mt-1 text-sm text-mute">You both get stars once your friend has finished their first {REFERRAL_MIN_GAMES} games with other players.</p>
       <div className="mt-3 truncate rounded-xl border border-line bg-panel-2 px-3 py-2 text-sm">{data.link}</div>
       <div className="mt-3 flex flex-wrap gap-2">
         <Button

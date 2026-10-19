@@ -8,7 +8,7 @@ export function WinMeter({ room, myId }: { room: RoomState; myId?: string }) {
   return (
     <p className="flex flex-wrap items-center justify-center gap-x-2 text-xs text-mute">
       <span>
-        {room.mode === 'coop' ? 'Make it' : 'Win'}: <b className="text-gold">{room.win.points} pts + {room.win.stars}★</b>
+        {room.mode === 'coop' ? 'Make it' : 'Win'}: <b className="text-gold">{room.win.points} pts + ★{room.win.stars} back</b>
       </span>
       {room.bonus && (
         <>

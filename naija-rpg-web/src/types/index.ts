@@ -77,7 +77,8 @@ export type RoomState = {
   recap: string | null;
   world: MarkInfo[]
   solo: boolean;
-  win: { points: number; stars: number };
+  entry: number; // stars each player pays when the game starts
+  win: { points: number; stars: number }; // stars = the total paid to a winner (the entry comes back inside it)
   wins: Record<number, number> | null; // scenes won per team (duels only)
   bonus: BonusInfo | null;
   scenario: { id: string; title: string; tagline: string };
@@ -133,7 +134,8 @@ export type FinishedPayload = {
     team: number;
     result: Outcome;
     points: number;
-    stars: number;
+    entry: number; // stars this player paid to start
+    stars: number; // the total paid out (entry back + profit); 0 for a loss
     capped: boolean;
     bonus: 'earned' | 'missed' | null;
   }[];

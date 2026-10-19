@@ -2,7 +2,14 @@ import type { Approach, Format, Mode, Outcome, StarPlay, Tier } from '../types';
 
 // Keep these in sync with src/config/balance.ts on the server
 
-export const REFERRAL_STARS = 10;
+export const REFERRAL_STARS = 5;
+export const REFERRAL_MIN_GAMES = 2; // the friend must finish this many real (non-solo) games first
+export const COMEBACK_STARS = 1; // the free daily star for a player who is out of stars
+
+// What a game costs to start, and the TOTAL a winner gets back (the entry comes back inside it).
+export const ENTRY_COST = { solo: 1, duel: 2, coop: 2 } as const;
+export const PAYOUT = { solo: 1, duel: 3, coop: 3 } as const;
+export const entryKind = (m: { mode: Mode; solo?: boolean }): keyof typeof ENTRY_COST => (m.solo ? 'solo' : m.mode === 'coop' ? 'coop' : 'duel');
 
 export const APPROACHES: Record<Approach, { label: string; emoji: string }> = {
   charm: { label: 'Charm', emoji: '😎' },

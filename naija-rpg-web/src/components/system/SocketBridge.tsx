@@ -55,6 +55,20 @@ const onRoll = (r: PrivateRoll) => useGame.getState().setMyRoll(r);
         qc.invalidateQueries({ queryKey: ['landing'] });
       }, 2500);
     };
+    // A game that never got going (someone ran out of stars, or nobody moved in round 1): back to the play screen
+    const onAborted = (d: { reason?: string; refunded?: boolean }) => {
+      useGame.getState().reset();
+      const text =
+        d.reason === 'nobody_moved'
+          ? 'Nobody made a move in round 1, so the game was cancelled and your entry stars are back.'
+          : d.reason === 'not_enough_stars'
+            ? 'Someone ran out of stars before the game could start. Nothing was charged.'
+            : "The game couldn't start. Your stars are safe, try again.";
+      toast(text, 'info');
+      qc.invalidateQueries({ queryKey: ['me'] });
+      qc.invalidateQueries({ queryKey: ['stars'] });
+      if (window.location.pathname !== '/play') router.push('/play');
+    };
     const onRematchStatus = (d: { ready: string[] }) => useGame.getState().setRematch(d.ready);
     const onRematchStart = () => useGame.getState().reset();
 
@@ -99,6 +113,7 @@ const onRoll = (r: PrivateRoll) => useGame.getState().setMyRoll(r);
     s.on('round:result', onResult);
     s.on('roll:private', onRoll);
     s.on('encounter:finished', onFinished);
+    s.on('room:aborted', onAborted);
     s.on('rematch:status', onRematchStatus);
     s.on('rematch:start', onRematchStart);
     s.on('stars:update', onStarsUpdate);
@@ -118,6 +133,7 @@ const onRoll = (r: PrivateRoll) => useGame.getState().setMyRoll(r);
       s.off('roll:private', onRoll);
       s.off('round:result', onResult);
       s.off('encounter:finished', onFinished);
+      s.off('room:aborted', onAborted);
       s.off('rematch:status', onRematchStatus);
       s.off('rematch:start', onRematchStart);
       s.off('stars:update', onStarsUpdate);

@@ -29,7 +29,9 @@ export async function api<T>(path: string, { method, body, auth = true }: Opts =
 const MESSAGES: Record<string, string> = {
   unauthorized: 'Sign-in hiccup. Refresh and try again.',
   slow_down: 'Easy! Too fast. Try again in a moment.',
-  not_enough_stars: "You don't have enough stars for that.",
+  not_enough_stars: "You don't have enough stars for that. Win some, claim your free daily star, or grab a pack.",
+  not_empty: 'The free star is only for when you are out of stars.',
+  already_claimed: "You've already claimed today's free star. It comes back tomorrow.",
   signup_required: 'Create an account to buy stars.',
   room_full: 'That game is already full.',
   already_decided: "You've already decided.",
