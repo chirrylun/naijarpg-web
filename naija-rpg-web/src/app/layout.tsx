@@ -7,6 +7,7 @@ import { Navbar } from '@/components/layout/NavBar';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { Toaster } from '@/components/ui/Toaster';
 import { ChatDock } from '@/features/chat/ChatDock';
+import { Analytics } from "@vercel/analytics/next"
 
 const body = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-body' });
 const heading = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-heading' });
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   <ChatDock />
   <Toaster />
 </Providers>
+<Analytics/>
 
       </body>
     </html>
