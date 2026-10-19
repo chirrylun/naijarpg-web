@@ -1,4 +1,4 @@
-import { STAR_PLAYS } from '@/lib/constants';
+import { ENTRY_COST, PAYOUT, STAR_PLAYS } from '@/lib/constants';
 
 const STEPS = [
   { n: '1', t: 'Pick your move', d: 'Charm, Hustle, Lie or use Sense. Face every scenario with your best weapon.' },
@@ -29,7 +29,11 @@ export function HowItWorks() {
 
       <div className="relative mt-3 overflow-hidden rounded-3xl border border-gold/40 bg-gold/10 p-4 pt-6">
         <div className="ankara-strip absolute inset-x-0 top-0 h-1.5" aria-hidden />
-        <div className="font-display text-lg font-extrabold">Bonuses</div>
+        <div className="font-display text-lg font-extrabold">Stars</div>
+        <p className="mt-1 text-sm text-ink/70">
+          A game costs ★{ENTRY_COST.duel} to start (★{ENTRY_COST.solo} for solo). Win and ★{PAYOUT.duel} comes back, so a win pays for itself and a little more. Run out? You get a free star each day.
+        </p>
+        <div className="mt-4 font-display text-lg font-extrabold">Bonuses</div>
         <p className="mt-1 text-sm text-ink/70">
           Stars buy you a bonus after you see your roll. You can use one per scene. They help, but they never guarantee a win.
         </p>

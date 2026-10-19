@@ -19,6 +19,12 @@ import { useSession } from '@/stores/session';
 import { useToast } from '@/stores/toast';
 import type { FinishedPayload, RoomState } from '../../types';
 
+/** What the game did to your star balance: what was paid out minus the entry you put in. */
+const netStars = (r: { stars: number; entry: number }) => {
+  const net = r.stars - r.entry;
+  return net > 0 ? `+${net}★` : net < 0 ? `−${-net}★` : '±0★';
+};
+
 /** The scenes ended level, so one die each decided it. Shown plainly so nobody wonders why. */
 function Decider({ room, finished, myId }: { room: RoomState; finished: FinishedPayload; myId?: string }) {
   const myTeam = room.players.find((p) => p.userId === myId)?.team ?? 0;
@@ -75,10 +81,15 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
         <h1 className={`mt-2 font-display text-4xl font-extrabold ${copy.color}`}>{copy.title}</h1>
         {mine && (
           <p className="mt-1 font-display text-xl font-extrabold text-gold">
-            +{mine.points} points{mine.stars > 0 && ` · +${mine.stars}★`}
+            +{mine.points} points · {netStars(mine)}
           </p>
         )}
-        {mine?.capped && <p className="mt-1 text-xs text-mute">You have reached today&apos;s limit for game stars.</p>}
+        {mine && (
+          <p className="mt-1 text-xs text-mute">
+            Entry ★{mine.entry} · {mine.stars > 0 ? `paid out ★${mine.stars}` : 'no stars paid out'}
+          </p>
+        )}
+        {mine?.capped && <p className="mt-1 text-xs text-mute">You have reached today&apos;s limit for profit stars. Your entry still came back.</p>}
         <p className="mt-1 text-sm text-mute">{room.scenario.title}</p>
       </motion.div>
 
@@ -88,7 +99,7 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
         <Card className={mine.bonus === 'earned' ? 'border-brand/30 bg-brand/5' : 'border-line'}>
           <div className="text-[10px] font-bold uppercase tracking-wider text-mute">Bonus · {finished.bonus.label}</div>
           <p className={`mt-1 font-semibold ${mine.bonus === 'earned' ? 'text-brand' : 'text-mute'}`}>
-            {mine.bonus === 'earned' ? `${finished.bonus.earnedLine} +1★ +5 pts` : finished.bonus.lostMessage}
+            {mine.bonus === 'earned' ? `${finished.bonus.earnedLine} +5 pts` : finished.bonus.lostMessage}
           </p>
         </Card>
       )}
@@ -109,8 +120,7 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
               <span className="flex-1 truncate font-semibold">{r.userId === myId ? 'You' : r.username}</span>
               <span className="text-xs font-bold uppercase text-mute">{r.result}</span>
               <span className="font-bold text-gold">
-                +{r.points}
-                {r.stars > 0 && ` · +${r.stars}★`}
+                +{r.points} · {netStars(r)}
               </span>
             </div>
           );
@@ -119,7 +129,7 @@ export function ResultScreen({ room, finished }: { room: RoomState; finished: Fi
 
       <div className="grid grid-cols-2 gap-3">
         <Button size="lg" onClick={rematch} disabled={asked}>
-          {asked ? `Waiting ${ready.length}/${room.capacity}` : 'Rematch'}
+          {asked ? `Waiting ${ready.length}/${room.capacity}` : `Rematch · ★${room.entry}`}
         </Button>
         <Button size="lg" variant="ghost" onClick={playAgain}>
           New game

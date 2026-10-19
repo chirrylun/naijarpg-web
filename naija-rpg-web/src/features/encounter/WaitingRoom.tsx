@@ -60,7 +60,9 @@ export function WaitingRoom({ room }: { room: RoomState }) {
               Copy link
             </Button>
           </div>
-          <p className="text-center text-xs text-mute">The game starts as soon as everyone has joined.</p>
+          <p className="text-center text-xs text-mute">
+            The game starts as soon as everyone has joined. The ★{room.entry} entry is only taken then, and it goes back to you if the game is cancelled.
+          </p>
         </Card>
       )}
 

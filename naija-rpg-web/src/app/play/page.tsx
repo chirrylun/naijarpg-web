@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/features/avatar/Avatar';
@@ -12,7 +12,7 @@ import { ReferralCard } from '@/features/referrals/ReferralCard';
 import { useMe } from '@/hooks/useMe';
 import { useRequireSession } from '@/hooks/useRequireSession';
 import { api, errorText } from '@/lib/api';
-import { MODE_CARDS } from '@/lib/constants';
+import { COMEBACK_STARS, ENTRY_COST, MODE_CARDS, PAYOUT, entryKind } from '@/lib/constants';
 import { emitAck, ensureReady, getSocket } from '@/lib/socket';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/stores/toast';
@@ -31,10 +31,24 @@ export default function PlayPage() {
   const searchingRef = useRef(false);
   const toast = useToast.getState().push;
   const card = MODE_CARDS.find((m) => m.id === picked)!;
+  const qc = useQueryClient();
+  const [claiming, setClaiming] = useState(false);
+  const cost = ENTRY_COST[entryKind(card)];
+  const short = !!me && me.stars < cost; // can't pay the entry for the picked mode
+  const out = !!me && me.stars === 0;
 
   useEffect(() => {
     searchingRef.current = searching;
   }, [searching]);
+  // the server cancelled the search (someone ran out of stars): stop the spinner
+  useEffect(() => {
+    const s = getSocket();
+    const stop = () => setSearching(false);
+    s.on('room:aborted', stop);
+    return () => {
+      s.off('room:aborted', stop);
+    };
+  }, []);
   // leaving the page while queued: leave the queue too
   useEffect(
     () => () => {
@@ -82,6 +96,19 @@ export default function PlayPage() {
       toast(errorText(e), 'bad');
     } finally {
       setBusy(false);
+    }
+  }
+  async function claimFreeStar() {
+    setClaiming(true);
+    try {
+      await api('/api/stars/comeback', { method: 'POST', body: {} });
+      toast(`Free star claimed! ★ ${COMEBACK_STARS}`, 'good');
+      qc.invalidateQueries({ queryKey: ['me'] });
+      qc.invalidateQueries({ queryKey: ['stars'] });
+    } catch (e) {
+      toast(errorText(e), 'bad');
+    } finally {
+      setClaiming(false);
     }
   }
   function playDaily() {
@@ -152,25 +179,48 @@ export default function PlayPage() {
                 <div className="text-xs font-bold uppercase tracking-wide text-brand">{m.tag}</div>
                 <div className="font-display text-lg font-extrabold">{m.name}</div>
                 <p className="mt-1 text-xs text-mute">{m.blurb}</p>
+                <p className="mt-2 text-[11px] font-bold text-gold">
+                  ★{ENTRY_COST[entryKind(m)]} to play · win ★{PAYOUT[entryKind(m)]} back
+                </p>
               </div>
             </button>
           ))}
         </div>
         {card.solo ? (
           <div className="mt-4">
-            <Button size="lg" variant="gold" className="w-full" loading={busy} onClick={startSolo}>
-              Start solo game
+            <Button size="lg" variant="gold" className="w-full" loading={busy} disabled={short} onClick={startSolo}>
+              Start solo game · ★{cost}
             </Button>
           </div>
         ) : (
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <Button size="lg" variant="gold" loading={busy} onClick={challenge}>
-              Challenge a friend
+            <Button size="lg" variant="gold" loading={busy} disabled={short} onClick={challenge}>
+              Challenge a friend · ★{cost}
             </Button>
-            <Button size="lg" onClick={() => quick(card.mode, card.format)}>
-              Quick match
+            <Button size="lg" disabled={short} onClick={() => quick(card.mode, card.format)}>
+              Quick match · ★{cost}
             </Button>
           </div>
+        )}
+        {short && (
+          <Card className="mt-4 space-y-3 border-gold/40 bg-gold/5">
+            <div className="font-display text-lg font-extrabold">{out ? "You're out of stars" : `This mode needs ★${cost}`}</div>
+            <p className="text-sm text-mute">
+              {out
+                ? `Every game costs a few stars to start, and a win pays them back. Claim your free daily star for a solo game (★${ENTRY_COST.solo}), or grab a pack.`
+                : `You have ★${me?.stars}. A solo game costs ★${ENTRY_COST.solo}, or grab a pack to play with friends.`}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {out && (
+                <Button size="sm" variant="gold" loading={claiming} onClick={claimFreeStar}>
+                  Claim free ★{COMEBACK_STARS}
+                </Button>
+              )}
+              <Link href="/shop" className="inline-flex h-9 items-center rounded-2xl border border-gold/40 px-3 text-sm font-bold text-gold">
+                Get stars
+              </Link>
+            </div>
+          </Card>
         )}
       </section>
 
