@@ -105,7 +105,7 @@ export type RollRow = {
   modifier: number;
   starBonus: number;
   total: number;
-  dc: number; // the number this roll needed
+  dc: number | null; // the number this roll needed. null in Face Off (only solo and co-op show a target)
   passed: boolean; // did it reach that number
   tier: Tier;
   standing: Standing;
@@ -157,7 +157,7 @@ export type PrivateRoll = {
   modifier: number;
   starBonus: number;
   total: number;
-  dc: number; // the number you need
+  dc: number | null; // the number you need. null in Face Off (only solo and co-op show a target)
   passed: boolean;
   tier: Tier;
   shielded: boolean;
@@ -172,7 +172,7 @@ export type MarkWho = 'self' | 'rival' | 'world';
 export type SceneChoice = {
   approach: Approach;
   label: string;
-  dc: number; // the number you need to roll
+  dc: number | null; // the number you need to roll. null in Face Off (only solo and co-op show a target)
   mods: { mark: string; who: MarkWho; delta: number; label: string }[];
   lock: { mark: string; who: MarkWho; reason: string } | null;
 };
