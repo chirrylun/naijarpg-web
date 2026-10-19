@@ -182,6 +182,7 @@ export default function PlayPage() {
                 
               </div>
             </button>
+            
           ))}
         </div>
         {card.solo ? (
