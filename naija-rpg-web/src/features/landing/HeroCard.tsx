@@ -88,9 +88,7 @@ export function HeroCard() {
           ))}
         </ol>
 
-        <p className="mt-5 rounded-2xl bg-brand/10 px-3 py-2 text-center text-xs font-semibold text-brand">
-          Takes about 2 minutes. No sign-up needed.
-        </p>
+      
       </div>
 
       <div className="absolute -right-3 -top-5 flex size-16 rotate-6 flex-col items-center justify-center rounded-2xl bg-gold font-display font-extrabold leading-none text-[#241800] shadow-[0_5px_0_0_var(--color-gold-deep)]">
