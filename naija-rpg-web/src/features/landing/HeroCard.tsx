@@ -42,7 +42,7 @@ const STEPS: { title: string; text: string; extra: ReactNode }[] = [
   },
   {
     title: 'Roll the dice',
-    text: 'Face Off: the higher roll wins the scene, and a tie rolls again. Link Up: beat the challenge together.',
+    text: 'The higher roll wins the scene, and a tie rolls again. In coop, you and your friend beat the challenge together.',
     extra: null,
   },
   {
