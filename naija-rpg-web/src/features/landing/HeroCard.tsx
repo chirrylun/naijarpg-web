@@ -26,7 +26,7 @@ function Chip({ children, tone = 'plain' }: { children: ReactNode; tone?: 'plain
 const STEPS: { title: string; text: string; extra: ReactNode }[] = [
   {
     title: 'Pick how to play',
-    text: 'Play against a friend, or team up with one.',
+    text: 'Play alone, against a friend, or team up with one.',
     extra: null
     ,
   },
@@ -48,11 +48,7 @@ const STEPS: { title: string; text: string; extra: ReactNode }[] = [
   {
     title: 'Boost it, then win',
     text: 'Not happy with your roll? Spend stars to fix it. Whoever wins the most scenes wins the game.',
-    extra: BOOSTS.map((b) => (
-      <Chip key={b.id} tone="gold">
-        {b.label} <span>★ {b.cost}</span>
-      </Chip>
-    )),
+    extra: null
   },
 ];
 
