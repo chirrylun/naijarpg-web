@@ -27,12 +27,8 @@ const STEPS: { title: string; text: string; extra: ReactNode }[] = [
   {
     title: 'Pick how to play',
     text: 'Play against a friend, or team up with one.',
-    extra: MODE_CARDS.map((m) => (
-      <Chip key={m.id}>
-        <b>{m.name}</b>
-        <span className="text-mute">· {MODE_NOTE[m.mode] ?? m.tag}</span>
-      </Chip>
-    )),
+    extra: null
+    ,
   },
   {
     title: 'Read the scene, pick a move',
@@ -51,7 +47,7 @@ const STEPS: { title: string; text: string; extra: ReactNode }[] = [
   },
   {
     title: 'Boost it, then win',
-    text: 'Not happy with your roll? Spend stars to fix it. Win the most scenes to win the game.',
+    text: 'Not happy with your roll? Spend stars to fix it. Whoever wins the most scenes wins the game.',
     extra: BOOSTS.map((b) => (
       <Chip key={b.id} tone="gold">
         {b.label} <span>★ {b.cost}</span>
